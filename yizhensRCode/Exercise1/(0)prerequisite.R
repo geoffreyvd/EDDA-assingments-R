@@ -5,4 +5,6 @@ for(b in 1:B){
   y = rnorm(m, nu, sd) 
   p[b] = t.test(x, y, var.equal = TRUE)[[3]]
 }
+
 power = mean(p < 0.05)
+
