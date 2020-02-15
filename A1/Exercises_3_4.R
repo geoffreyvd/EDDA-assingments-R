@@ -27,7 +27,7 @@ pl=sum(tstar<t)/B
 pr=sum(tstar>t)/B
 p=2*min(pl,pr)
 
-#C
+# C
 
 B = 1000
 tstar = numeric(B)
