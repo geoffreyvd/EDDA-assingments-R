@@ -7,62 +7,40 @@ nonzero = apply(data, 1, function(row) all(row > 0))
 clean_data = data[nonzero, ]
 hist(clean_data,prob=T, main="Histogram of telephone bills", xlab="amount on bill")
 
-# Most frequent customer types are customers 
-# with a relatively low phone bill and a realatively high phone bill. 
-# Therefore, the markerters can target both groups
-# and should not invest too much in advertisement for the middle segment.
-
 # B
 
-# Bootstrap Test
-# test statistic T = median(X 1 , . . . , X 200 )
-# exponential distribution Exp(λ) with some λ from [0.01, 0.1]
-
-# h0 does clean_data stem from the exponential distr with lambda 0.01-0.1?
-
-T = median(clean_data)
-T
-
+# Test statistic is the median of the data
+t = median(clean_data)
 B = 1000
-
-Tstar = numeric(B)
-
+tstar = numeric(B)
 n = length(clean_data)
-n
+l = 0.05 # lambda
 
 for (i in 1:B) {
-  l = runif(1, 0.01, 0.1)
-  Xstar = rexp(n, l)  
-  Tstar[i] = median(Xstar)
+  xstar = rexp(n, l)  
+  tstar[i] = median(xstar)
 }
-hist(Tstar, prob=T)
+hist(tstar, prob=T)
 
-pl=sum(Tstar<T)/B
-pr=sum(Tstar>T)/B
+# Calculate the p-value
+pl=sum(tstar<t)/B
+pr=sum(tstar>t)/B
 p=2*min(pl,pr)
-pl;pr;p
 
 #C
 
-# Construct a 95% bootstrap confidence interval 
-# for the population median for the sample
-
-clean_data
-T
 B = 1000
-Tstar = numeric(B)
+tstar = numeric(B)
 
 for (i in 1:B){
-  Xstar = sample(clean_data, replace=TRUE)
-  Tstar[i] = median(Xstar)
+  xstar = sample(clean_data, replace=TRUE)
+  tstar[i] = median(xstar)
 }
 
-Tstar25 = quantile(Tstar,0.025)
-Tstar975 = quantile(Tstar,0.975)
-sum(Tstar<Tstar25)
-c(2*T-Tstar975,2*T-Tstar25)
-
-#The 95% bootstrap confidence interval for the population media of telephone data is [18, 37] around its median T = 29.
+tstar25 = quantile(tstar,0.025)
+tstar975 = quantile(tstar,0.975)
+sum(tstar<tstar25)
+c(2*t-tstar975,2*t-tstar25)
 
 # D
 
@@ -73,7 +51,7 @@ c(2*T-Tstar975,2*T-Tstar25)
 # Comment on findings 
 
 
-
+# ----------------------------------------------------------------------
 
 
 # ASSIGNMENT 1 EXERCISE 4 #
