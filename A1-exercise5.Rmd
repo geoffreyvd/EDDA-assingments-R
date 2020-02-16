@@ -1,0 +1,96 @@
+---
+title: "EDDA - assignment1"
+author: "Geoffrey"
+date: "February 16, 2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#Exercise 5. (Chick weights)
+##a) The two groups are not paired. We first test normallity and their variance:
+```{r}
+x = chickwts
+mm = subset(x, feed=="meatmeal")["weight"]
+sf = subset(x, feed=="sunflower")["weight"]
+mm1 = as.numeric(unlist(mm))
+sf1 = as.numeric(unlist(sf))
+
+var.test(mm1, sf1)
+
+par(mfrow=c(1,2))
+qqnorm(mm1)
+qqnorm(sf1)
+```
+
+From the variance test we can conclude that their is no difference. And from the qqplots we can conclude that they are normal.
+From the following code we conclude that according to 1) the two sample t test there is a significant difference in their mean, 2) the mann whitney test there is not a sifnificant difference in distribution and 3) the kalmogorov-smirnov test there is not a difference in the distribution.
+```{r}
+t.test(mm1, sf1, alternative = "two.sided", var.equal = TRUE)
+
+wilcox.test(mm1, sf1, alternative = "two.sided", var.equal = TRUE)
+
+ks.test(mm1, sf1)
+``` 
+
+We conclude that there is a significant difference in the weight of the chicken groups. Because the sample is normaly distributed and therefor we use the regular t.test.
+
+##b) Using one way anova we can conclude that the means are not all equal:
+```{r}
+res.aov = aov(weight ~ feed, data = x)
+summary(res.aov)
+
+```
+
+We can further conclude that sunflowers breat the heaviest chicks:
+```{r}
+tapply(x$weight, x$feed, mean)
+
+```
+
+##c)By visualising in the boxplots we can see small differences in the variances.
+```{r}
+boxplot(weight ~ feed, data = x,
+        xlab = "Treatment", ylab = "Weight",
+        frame = FALSE)
+```
+
+We assume that all the groups are normally distributed. However we do check whether their variances are homogenious. We first visualise the residuals by the fitted values, which suggests that they are homogenious. And then we do it formally with the bartlett test. Which results in a p value 0.66, after which we can conclude that there is no significant difference in the variance.
+
+```{r}
+plot(res.aov, 1)
+bartlett.test(weight ~ feed, data = x)
+```
+
+##d) Kruskal wallis test also comes up with a very small p number, which is also smaller than 0.05. Therefor it has the same conclusion as the one way anova test: the means are not the same and thus the treatment matters. 
+```{r}
+kruskal.test(weight ~ feed, data = x)
+
+```
+
+
+
+
+<!-- example stuff -->
+## R Markdown <--- example stuff
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
