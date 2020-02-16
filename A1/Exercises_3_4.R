@@ -5,29 +5,36 @@
 data = read.table(file = "telephone.txt", header=TRUE)
 nonzero = apply(data, 1, function(row) all(row > 0))
 clean_data = data[nonzero, ]
-hist(clean_data,prob=T, main="Histogram of telephone bills", xlab="amount on bill")
+hist(clean_data,prob=T, main="A) Histogram of telephone bills", xlab="amount on bill")
 
 # B
 
+distr = rexp(1000,0.05)
+
 # Test statistic is the median of the data
 t = median(clean_data)
+n = length(clean_data)
 B = 1000
 tstar = numeric(B)
-n = length(clean_data)
-l = 0.05 # lambda
-
+l = 0.03 # lambda
+#Create a set of representative medians for the exponentional distribution
+#With lambda 0.03 and sample length equal to our data sample
 for (i in 1:B) {
   xstar = rexp(n, l)  
   tstar[i] = median(xstar)
 }
-hist(tstar, prob=T)
 
 # Calculate the p-value
 pl=sum(tstar<t)/B
 pr=sum(tstar>t)/B
 p=2*min(pl,pr)
+p
 
-# C
+#Distribution of the medians of the exponential distribution lambda = 0.03
+hist(tstar, prob = T,main = "B) Histogram of T*")
+#How to get true density curve of x?
+
+#C
 
 B = 1000
 tstar = numeric(B)
