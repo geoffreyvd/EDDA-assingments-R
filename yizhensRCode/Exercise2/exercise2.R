@@ -4,7 +4,7 @@ light1882 = scan(file = "~/Desktop/light1882.txt")
 
 light1879 = light1879 + 299000
 light1882 = light1882 + 299000
-light = (7.442*1000 / (light/1000+24.8))*1000
+light = 7.442 / (light/1000+24.8)*1000000
 
 par(mfrow=c(1,3))
 hist(light, prob=T)
