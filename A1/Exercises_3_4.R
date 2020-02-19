@@ -52,10 +52,77 @@ c(2*t-tstar975,2*t-tstar25)
 # D
 
 # Assume this sample originate from an exponential distribution for an unknown lambda
+
 # Use Central Limit Theorem for sample mean
+
+B = 1000
+sampleSize = 30
+tel_means = numeric(B)
+for (i in 1:B){
+  sample = sample(clean_data, size = sampleSize)
+  tel_means[i] = mean(sample)
+}
+t = median(tel_means)
+#median tel_means  45.32217
+hist(tel_means)
+
 # Estimate lambda
-# Construct 95% confidence interval for the population media
+#median exponential with lambda:
+#0.1  10.44204
+#0.05 20.12647
+#0.04 24.57835
+#0.03 32.43111
+#0.02 48.11552
+#0.01 101.3529
+exp_means = numeric(n)
+exp = rexp(1000, rate = 0.02)
+for (i in 1:B){
+  sample = sample(exp, size = sampleSize)
+  exp_means[i] = mean(sample)
+}
+median(exp_means)
+hist(exp_means)
+
+#Therefore, we estimate lambda to be at rate 0.02.
+
+# Construct 95% confidence interval for the population median
+
+B = 1000
+tstar = numeric(B)
+
+for (i in 1:B){
+  xstar = sample(tel_means, replace=TRUE)
+  tstar[i] = median(xstar)
+}
+
+tstar25 = quantile(tstar,0.025)
+tstar975 = quantile(tstar,0.975)
+sum(tstar<tstar25)
+c(2*t-tstar975,2*t-tstar25)
+#97.5 % - 2.5 % 44.52959 45.32484 
+
 # Comment on findings 
+
+# E
+
+#Using an appropriate test, 
+#test the null hypothesis that the median bill is bigger or equal to 40 euro
+#against the alternative that the median bill is smaller than 40 euro. 
+
+# H 0            median bill >=  40 euro
+# H alternative  median bill <   40 euro
+
+hist(clean_data)
+median(clean_data) #28.905
+#Because the data originates from one sample and is not normally distributed,
+#we perform a sign test.
+x = sum(clean_data>=40)
+n = length(clean_data)
+binom.test(x,n,p=0.5)
+
+#Next, design and perform a test
+#to check whether the fraction of the bills less than 10 euro is at most 25%.
+
 
 
 # ----------------------------------------------------------------------
