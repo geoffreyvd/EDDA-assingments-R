@@ -60,7 +60,6 @@ c(2*t-tstar975,2*t-tstar25)
 # Assume this sample originate from an exponential distribution for an unknown lambda
 
 # Use Central Limit Theorem for sample mean
-
 B = 1000
 sampleSize = 30
 tel_means = numeric(B)
@@ -68,36 +67,28 @@ for (i in 1:B){
   sample = sample(clean_data, size = sampleSize)
   tel_means[i] = mean(sample)
 }
-t = median(tel_means)
-#median tel_means  45.32217
+t = median(tel_means) #median tel_means  45.32217
 hist(tel_means)
 
-# Estimate lambda
-#median exponential with lambda:
-#0.1  10.44204
-#0.05 20.12647
-#0.04 24.57835
-#0.03 32.43111
-#0.02 48.11552
-#0.01 101.3529
-exp_means = numeric(n)
-exp = rexp(1000, rate = 0.02)
-for (i in 1:B){
-  sample = sample(exp, size = sampleSize)
-  exp_means[i] = mean(sample)
+# Estimate lambda varying between [0.01, 0.1]
+l = seq(0.01,0.1,by=0.01)
+exp_means = numeric(B)
+for (i in 1:10) {
+  exp = rexp(1000, rate = l[i])
+  for (j in 1:B){
+    sample = sample(exp, size = sampleSize)
+    exp_means[j] = mean(sample)
+  }
+  # Print the median
+  cat("median = ", median(exp_means), "for lambda = ", l[i], "\n")
 }
-median(exp_means)
-hist(exp_means)
-
-#Therefore, we estimate lambda to be at rate 0.02.
 
 # Construct 95% confidence interval for the population median
-
 B = 1000
 tstar = numeric(B)
 
 for (i in 1:B){
-  xstar = sample(tel_means, replace=TRUE)
+  xstar = sample(rexp(1000, rate = 0.02), replace=TRUE)
   tstar[i] = median(xstar)
 }
 
@@ -105,9 +96,6 @@ tstar25 = quantile(tstar,0.025)
 tstar975 = quantile(tstar,0.975)
 sum(tstar<tstar25)
 c(2*t-tstar975,2*t-tstar25)
-#97.5 % - 2.5 % 44.52959 45.32484 
-
-# Comment on findings 
 
 # E
 
