@@ -5,34 +5,40 @@
 data = read.table(file = "telephone.txt", header=TRUE)
 nonzero = apply(data, 1, function(row) all(row > 0))
 clean_data = data[nonzero, ]
+# 2 plots on 1 figure
+par(mfrow=c(1,2))
 hist(clean_data,prob=T, main="A) Histogram of telephone bills", xlab="amount on bill")
 
 # B
 
-distr = rexp(1000,0.05)
-
-# Test statistic is the median of the data
+# Median is test statistic
 t = median(clean_data)
 n = length(clean_data)
 B = 1000
 tstar = numeric(B)
-l = 0.03 # lambda
-#Create a set of representative medians for the exponentional distribution
-#With lambda 0.03 and sample length equal to our data sample
-for (i in 1:B) {
-  xstar = rexp(n, l)  
-  tstar[i] = median(xstar)
+# Lambda's ranging from 0.01, 0.02 ... up to 0.1
+l = seq(0.01,0.1,by=0.01)
+
+# Create a set of representative medians 
+# for the exponential distribution
+# with lambda varying between [0.01,0.1]
+# and sample length equal to our data sample
+for (i in 1:10) {
+  for (j in 1:B) {
+    xstar = rexp(n, l[i])  
+    tstar[j] = median(xstar)
+  }
+  # Calculate the p-value
+  pl=sum(tstar<t)/B
+  pr=sum(tstar>t)/B
+  p=2*min(pl,pr)
+  # Print the p-value
+  cat("p-value = ", p, "for lambda = ", l[i], "\n")
+  if (p > 0.05){ # h0 is not rejected
+    cat("H0 is not rejected with lambda = ", l[i], "\n")
+    hist(tstar, prob = T, main = "B) Histogram of T*", xlab = "median")  
+  }
 }
-
-# Calculate the p-value
-pl=sum(tstar<t)/B
-pr=sum(tstar>t)/B
-p=2*min(pl,pr)
-p
-
-#Distribution of the medians of the exponential distribution lambda = 0.03
-hist(tstar, prob = T,main = "B) Histogram of T*")
-#How to get true density curve of x?
 
 #C
 
