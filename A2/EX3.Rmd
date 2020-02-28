@@ -1,0 +1,53 @@
+---
+title: "EX3"
+author: "Yizhen"
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Exercise 3. (cow)
+##a) Test whether the type of feedingstuffs influences milk production using an ordinary “fixed effects” model, fitted with lm. Estimate the difference in milk production.
+#repeated measures
+```{r}
+cow = read.table("cow.txt", header = TRUE)
+cow
+```
+
+```{r}
+#There are two factors influence the milk production
+cow$id = as.factor(cow$id)
+cow$per = as.factor(cow$per)
+cowanova = lm(milk~id+per+treatment,data = cow)
+summary(cowanova)
+anova(cowanova)
+``` 
+
+From the results we could know that within-cow variation(see variable "id") differs between cows. Because the p-value for id is less than 0.05, therefore, H0 is rejected which means most cows most of the cows(except id4) are different from cow with id1. 
+Then, we could see p-value for per is less than 0.05 so we reject H0 which means whether a cow is going through the first treatment or second seems to make a difference.
+Furthurmore, because the p-value of treatment is 0.51654, so we do not reject H0 which means the treatment A does not significant differ from treatment B. There is no significant difference in milk production.
+
+##b) Repeat a) and b) by performing a mixed effects analysis, modelling the cow effect as a random effect (use the function lmer). Compare your results to the results found by using a fixed effects model.
+```{r}
+library(lme4)
+cowlmer = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
+summary(cowlmer)
+```
+
+```{r}
+cowlmerTreatment = lmer(milk~per+(1|id), data=cow, REML = FALSE)
+anova(cowlmerTreatment, cowlmer)
+```
+Based on the p-value, we could know that treatment is not important. 
+
+```{r}
+cowlmerPer = lmer(milk~treatment+(1|id), data=cow, REML = FALSE)
+anova(cowlmerPer, cowlmer)
+```
+Based on the p-value, we could know that whether a cow is going through the first treatment or second is important. 
+
+##c)
+```{r}
+attach(cow)
+t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
+```
+From this result that p-value is 0.8281 which means the treatment is important. However, from previous analysis treatment should not be important. Given the design that it is inappropriate to use paired t-test. Because during our analysis, the variable "per" has a significant effect on milk production, it may not be wise to ignore this factor when comparing two groups. 
