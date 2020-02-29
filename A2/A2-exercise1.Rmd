@@ -1,0 +1,65 @@
+---
+title: "A2-exercise1"
+author: "geoffrey"
+date: "February 29, 2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(fig.width=8, fig.height=4) 
+```
+
+# Assignment 2
+## Exercise 1
+### a.
+A randomized design with two categorical factors, with 
+
+1. the first factor having three categorical levels and
+2. the second factor having two levels and
+3. having three samples for each unique categorie
+
+can be produced with the following R code:
+``` {r echo=TRUE, eval=FALSE}
+I=3; J=2; N=3
+rbind(rep(1:I,each=N*J),rep(1:J,N*I),sample(1:(N*I*J)))
+```
+
+### b.
+The boxplot and interaction plot below confirms our intuition:
+
+1. A cold environment causes a much slower decay
+2. Wet bread has a much wider distribution (variance)
+3. On average dry bread decays slower than wet bread
+4. However, wet and cold (frozen) bread has the slowest decay
+
+From the non-parallel lines in the interaction plot and the wide distribution of the wet sample we conclude that the (wet) humidity amplifies the effect of the temperature and thus it can be explained by the strong interaction between the two factors (opposed to the errors in the measurement).
+
+```{r}
+bread = read.table("bread.txt", header = TRUE)
+
+par(mfrow=c(1,2))
+boxplot(hours ~ humidity, data = bread)
+boxplot(hours ~ environment, data = bread)
+```
+
+```{r}
+  
+interaction.plot(bread$environment, bread$humidity, bread$hours,
+        xlab = "Temperature", ylab = "Hours", trace.label = "Humidity")
+```
+
+### c.
+From the two-way anova resulst below, we can conclude that both factors have a main effect on the decay time of bread. It can also be concluded that the factors have an interaction effect.
+```{r}
+breadaov=lm(hours~humidity*environment, data = bread); 
+anova(breadaov)
+```
+
+### d.
+TODO
+```{r}
+summary(breadaov)$coefficients
+```
+
+
