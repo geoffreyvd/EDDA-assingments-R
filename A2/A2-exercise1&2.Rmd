@@ -1,5 +1,5 @@
 ---
-title: "A2-exercise1"
+title: "A2- Exercise1 and 2"
 author: "geoffrey"
 date: "February 29, 2020"
 output: pdf_document
@@ -130,11 +130,12 @@ The result of the Friedman test is the same as the ANOVA: we reject the H0, thus
 friedman.test(search$time,search$interface,search$skill)
 ```
 
-### f. 
+### f. One-way ANOVA 
+The one-way ANOVA returns no significant difference in the search time between the interfaces. This result is not very usefull, because 1) we removed a lot of information from the model and 2) the model now assumes that the block is a random selection of all available blocks, which is not the case because the blocks were fixed/predetermined.
 
 ```{r}
 
-aovsearch=lm(time~interface, data=search)
-anova(aovsearch)
+aovsearch2=lm(time~interface, data=search)
+anova(aovsearch2)
 
 ```
