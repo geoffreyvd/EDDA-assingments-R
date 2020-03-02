@@ -10,9 +10,8 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=8, fig.height=4) 
 ```
 
-# Assignment 2
 ## Exercise 1
-### a.
+### a. Randomized design
 A randomized design with two categorical factors, with 
 
 1. the first factor having three categorical levels and
@@ -25,7 +24,7 @@ I=3; J=2; N=3
 rbind(rep(1:I,each=N*J),rep(1:J,N*I),sample(1:(N*I*J)))
 ```
 
-### b.
+### b. Plotting
 The boxplot and interaction plot below confirms our intuition:
 
 1. A cold environment causes a much slower decay
@@ -49,17 +48,25 @@ interaction.plot(bread$environment, bread$humidity, bread$hours,
         xlab = "Temperature", ylab = "Hours", trace.label = "Humidity")
 ```
 
-### c.
+### c. Two way ANOVA
 From the two-way anova resulst below, we can conclude that both factors have a main effect on the decay time of bread. It can also be concluded that the factors have an interaction effect.
 ```{r}
 breadaov=lm(hours~humidity*environment, data = bread); 
 anova(breadaov)
 ```
 
-### d.
+### d. Coefficients
 TODO
 ```{r}
 summary(breadaov)$coefficients
 ```
 
+### e. Diagnostics
+The first requirements is that for each unique categorie, there should be atleast 2 samples, which is the case. Then the most important requirement is that the data among the factors should approximiatly have equal variances. This has been tested in b. and the conclusions was that they approximitally were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which is to be expected of a random variable. In the following QQplot it can be seen that the residuals are approximiatly normally distributed. And in the fitted residuals plot it can be seen that the spread is approxomitelly the same among the fitted values, however there are 2 outliers in the middle. 
+
+```{r}
+par(mfrow=c(1,2))
+qqnorm(residuals(breadaov))
+plot(fitted(breadaov),residuals(breadaov))
+```
 
