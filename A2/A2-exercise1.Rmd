@@ -70,3 +70,71 @@ qqnorm(residuals(breadaov))
 plot(fitted(breadaov),residuals(breadaov))
 ```
 
+
+## Exercise 2
+### a. Randomized block design
+The following code generates a random block design with five blocks, a factor with three levels, and one sample per unique categorie.
+
+```{r echo=TRUE, eval=FALSE}
+B=5;
+if1 = sample(1:5)
+if2 = sample(6:10)
+if3 = sample(11:15)
+for (i in 1:B) print(c(if1[i], if2[i], if3[i]))
+```
+
+### b. Graphical pre-analysis
+The boxplots below suggest that indeed the skil level and the interfaces matter for the search time. Where skill level 1 is indeed the fastest, and interface 1 is the fastest from the three interfaces.
+And from the interaction plots below it can be observed that overall the factors have the same pattern; all lines start in the lower left corner and end towwards the upper right corner. However, they are not perfectly parallel, this can be explained by the small sample sizes which causes local irregularities. Thus we conclude that there is no interaction between the two factors. 
+
+```{r}
+search = read.table("search.txt", header = TRUE)
+
+par(mfrow=c(1,2))
+boxplot(time~skill, data=search)
+boxplot(time~interface, data=search)
+
+interaction.plot(search$skill,search$interface, search$time,
+                 xlab = "Skill level", ylab = "Time", trace.label = "Interface")
+interaction.plot(search$interface,search$skill, search$time,
+                 xlab = "Interface", ylab = "Time", trace.label = "Skill level")
+
+```
+
+### c. Anova with 1 block factor
+From the ANOVA results below it can be concluded that the search time is not the same for all interfaces. Futhermore, we can estimate the time it takes for a user with skill level 3 to find a product using interface 2 by looking at the summary table and adding the coeffcients of these two categories to the incercept. Thus that would be 15.015+3.033+2.7=20.748.
+
+```{r}
+search$skill = factor(search$skill)
+search$interface = factor(search$interface)
+
+aovsearch=lm(time~interface+skill, data=search)
+anova(aovsearch)
+summary(aovsearch)
+```
+
+
+### d. Diagnostics
+The QQ-plot of the residuals below looks normally distributed, which is good. The fitted residuals do not depict any outliers. 
+
+```{r}
+par(mfrow=c(1,2))
+qqnorm(residuals(aovsearch))
+plot(fitted(aovsearch),residuals(aovsearch))
+```
+
+### e. Friedmann test
+The result of the Friedman test is the same as the ANOVA: we reject the H0, thus there is a difference in sesarch times.
+
+```{r}
+friedman.test(search$time,search$interface,search$skill)
+```
+
+### f. 
+
+```{r}
+
+aovsearch=lm(time~interface, data=search)
+anova(aovsearch)
+
+```
