@@ -1,5 +1,5 @@
 ---
-title: "A2- Exercise1 and 2"
+title: "A2- Exxercise1 and 2"
 author: "geoffrey"
 date: "February 29, 2020"
 output: pdf_document
@@ -55,10 +55,11 @@ breadaov=lm(hours~humidity*environment, data = bread);
 anova(breadaov)
 ```
 
-### d. Coefficients
-TODO
+### d. Coefficients -- need review ---
+According to the means of squares, on avergae the environment has the biggest effect on the decay. However this can not be concluded so easily, because it is being compared to one base (the first categorie), instead of a more comprehensive annalysis.
+
 ```{r}
-summary(breadaov)$coefficients
+##summary(breadaov)$coefficients
 ```
 
 ### e. Diagnostics
