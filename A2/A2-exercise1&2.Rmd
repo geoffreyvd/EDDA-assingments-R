@@ -75,7 +75,6 @@ qqnorm(residuals(breadaov))
 plot(fitted(breadaov),residuals(breadaov))
 ```
 
-
 ## Exercise 2
 ### a. Randomized block design
 The following code generates a random block design with five blocks, a factor with three levels, and one sample per unique categorie.
@@ -89,8 +88,8 @@ for (i in 1:B) print(c(if1[i], if2[i], if3[i]))
 ```
 
 ### b. Graphical pre-analysis
-The boxplots below suggest that indeed the skil level and the interfaces matter for the search time. Where skill level 1 is indeed the fastest, and interface 1 is the fastest from the three interfaces.
-And from the interaction plots below it can be observed that overall the factors have the same pattern; all lines start in the lower left corner and end towwards the upper right corner. However, they are not perfectly parallel, this can be explained by the small sample sizes which causes local irregularities. Thus we conclude that there is no interaction between the two factors. 
+The boxplots below suggest that indeed the skill level and the interfaces matter for the search time. Where skill level 1 is indeed the fastest, and interface 1 is the fastest from the three interfaces.
+And from the interaction plots below it shows clear interaction effects and the overall the factors have the same pattern; all lines start in the lower left corner and end towwards the upper right corner. However, they are not perfectly parallel, this can be explained by the small sample sizes which causes local irregularities. Thus we conclude that there is no interaction between the two factors. 
 
 ```{r}
 search = read.table("search.txt", header = TRUE)
@@ -107,7 +106,8 @@ interaction.plot(search$interface,search$skill, search$time,
 ```
 
 ### c. Anova with 1 block factor
-From the ANOVA results below it can be concluded that the search time is not the same for all interfaces. Futhermore, we can estimate the time it takes for a user with skill level 3 to find a product using interface 2 by looking at the summary table and adding the coeffcients of these two categories to the incercept. Thus that would be 15.015+3.033+2.7=20.748.
+H0: Search time is the same for all interfaces
+From the ANOVA results below it can be concluded that H0 is rejected which means the search time is not the same for all interfaces. Futhermore, we can estimate the time it takes for a user with skill level 3 to find a product using interface 2 by looking at the summary table and adding the coeffcients of these two categories to the incercept. Thus that would be 15.015+3.033+2.7=20.748.
 
 ```{r}
 search$skill = factor(search$skill)
@@ -117,7 +117,6 @@ aovsearch=lm(time~interface+skill, data=search)
 anova(aovsearch)
 summary(aovsearch)
 ```
-
 
 ### d. Diagnostics
 The QQ-plot of the residuals below looks normally distributed, which is good. The fitted residuals do not depict any outliers. 
@@ -129,7 +128,7 @@ plot(fitted(aovsearch),residuals(aovsearch))
 ```
 
 ### e. Friedmann test
-The result of the Friedman test is the same as the ANOVA: we reject the H0, thus there is a difference in sesarch times.
+The result of the Friedman test is the same as the ANOVA: we reject the H0 mentioned before, thus there is a difference in sesarch times.
 
 ```{r}
 friedman.test(search$time,search$interface,search$skill)
