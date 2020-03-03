@@ -8,14 +8,13 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=8, fig.height=4) 
 ```
 #Exercise 3. (cow)
-##a) repeated measures - exchangebale 
-First we evaluate normality to determine which test to use. From the QQ-plots below we conclude that both treatment samples are normally distributed.
+##a) crossover design
+First we evaluate normality to determine which test to use. From the QQ-plots below we conclude that both treatment samples are normally distributed. 
 
 ```{r}
-cow = read.table("cow.txt", header = TRUE); 
+cow = read.table("cow.txt", header = TRUE);
 
 #There are two factors influence the milk production
-
 mm = subset(cow, treatment=="A")["milk"]
 sf = subset(cow, treatment=="B")["milk"]
 mm1 = as.numeric(unlist(mm))
@@ -26,41 +25,53 @@ qqnorm(mm1)
 qqnorm(sf1)
 ```
 
-From the ANOVA results below, we can conclude that within-cow variation(see variable "id") the milk production differs. Because the p-value for id is less than 0.05, therefore, H0 is rejected. Furthermore, from the summary we can conclude that most of the cows(except id4) are different from the cow with id1.  
-Then, we could see p-value for per is less than 0.05 so we reject H0 which means whether a cow is going through the first period or second seems to make a difference.
-Furthurmore, because the p-value of treatment is 0.51654, so we do not reject H0 which means the treatment A does not significant differ from treatment B. Also this could be seen from second table (treatmentB). Therefore there is no significant difference in milk production. However, it is important to note that this is not the appropiate way of testing the cross-over design.
+There are three hypothese:
+H0 (id): There is no difference in milk production within cows
+H0 (per): There is no difference in milk production with different period 
+H0 (treatment): There is no difference in milk production with different treatment
+
+From the ANOVA results below, we can conclude that within-cow variation(see variable "id") the milk production differs. Because the p-value for id is less than 0.05, therefore, the first H0 is rejected. Furthermore, from the summary we can conclude that most of the cows(except id4) are different from the cow with id1.  
+Then, we could see p-value for per is less than 0.05 so we reject the second H0 which means whether a cow is going through the first period or second seems to make a difference.
+Furthurmore, because the p-value of treatment is 0.51654, so we do not reject the third H0 which means the treatment A does not significant differ from treatment B. Also this could be seen from second table (treatmentB). 
+Also the summary below indicate that there is no significant difference in milk production. However, it is important to note that this is not the appropiate way of testing the cross-over design.
 
 
 ```{r}
-cow$id = factor(cow$id)
-cow$per = factor(cow$per)
+cow$id = factor(cow$id); cow$per = factor(cow$per)
 cowanova = lm(milk~id+per+treatment,data = cow)
-anova(cowanova); summary(cowanova)
+anova(cowanova)
+summary(cowanova)
 ``` 
 
-##b) modelling the cow effect as a random effect (use the function lmer). 
-TODO: add order in lmer formula
+##b) modelling the cow effect as a random effect (use the function lmer)
 ```{r}
 library(lme4)
-cowlmer = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
+cow$order=factor(cow$order)
+cowlmer = lmer(milk~treatment+order+per+(1|id), data=cow, REML = FALSE)
 summary(cowlmer)
 ```
 
+Based on the p-value below, we do not reject H0 for treatment we mentioned before which means treatment is not important. The result is the same as that in a).
 ```{r}
-cowlmerTreatment = lmer(milk~per+(1|id), data=cow, REML = FALSE)
+cowlmerTreatment = lmer(milk~order+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerTreatment, cowlmer)
 ```
-Based on the p-value, we could know that treatment is not important. The result is the same as that in a). 
 
+Based on the p-value below, we do not reject H0: There is no difference in milk production with different order. Therefore, the order of treatment AB is not important. 
 ```{r}
-cowlmerPer = lmer(milk~treatment+(1|id), data=cow, REML = FALSE)
+cowlmerOrder = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
+anova(cowlmerOrder, cowlmer)
+```
+
+Based on the p-value below, we reject H0 for per we mentioned before which means whether a cow is going through the first treatment or second is important. 
+```{r}
+cowlmerPer = lmer(milk~treatment+order+(1|id), data=cow, REML = FALSE)
 anova(cowlmerPer, cowlmer)
 ```
-Based on the p-value, we could know that whether a cow is going through the first treatment or second is important. 
 
 ##c)
+From this result below that p-value is 0.8281 and we do not reject H0 for treatment which means the treatment is not important. From previous analysis the same conclusion was reached. Given the design, it is inappropriate to use the paired t-test. Since the previous analysis shows factors such as per has significant effect on milk production, it might be unwise to ignore such factor.
 ```{r}
 attach(cow)
 t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
 ```
-From this result that p-value is 0.8281 which means the treatment is not important. From previous analysis the same conclusion was reached. Given the design, it is inappropriate to use the paired t-test. Because all other factors are being ignored.
