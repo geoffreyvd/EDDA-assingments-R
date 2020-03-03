@@ -49,7 +49,11 @@ interaction.plot(bread$environment, bread$humidity, bread$hours,
 ```
 
 ### c. Two way ANOVA
-From the two-way anova resulst below, we can conclude that both factors have a main effect on the decay time of bread. It can also be concluded that the factors have an interaction effect.
+We have 3 hyphotheses here:
+H0:There is no main effect of first factor (humidity)
+H0:There is no main effect of second factor (environment)
+H0:There is no interactions between two factors
+From the two-way anova resulst below, we reject both hyphotheses which means both factors have a main effect on the decay time of bread, and the factors have an interaction effect.
 ```{r}
 breadaov=lm(hours~humidity*environment, data = bread); 
 anova(breadaov)
@@ -59,11 +63,11 @@ anova(breadaov)
 According to the means of squares, on avergae the environment has the biggest effect on the decay. However this can not be concluded so easily, because it is being compared to one base (the first categorie), instead of a more comprehensive annalysis.
 
 ```{r}
-##summary(breadaov)$coefficients
+summary(breadaov)$coefficients
 ```
 
 ### e. Diagnostics
-The first requirements is that for each unique categorie, there should be atleast 2 samples, which is the case. Then the most important requirement is that the data among the factors should approximiatly have equal variances. This has been tested in b. and the conclusions was that they approximitally were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which is to be expected of a random variable. In the following QQplot it can be seen that the residuals are approximiatly normally distributed. And in the fitted residuals plot it can be seen that the spread is approxomitelly the same among the fitted values, however there are 2 outliers in the middle. 
+The first requirements is that for each unique categorie, there should be at least 2 samples, which is the case. Then the most important requirement is that the data among the factors should approximiatly have equal variances. This has been tested in b). and the conclusions was that they approximitally were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which is to be expected of a random variable. In the following QQplot it can be seen that the residuals are approximiatly normally distributed. And in the fitted residuals plot it can be seen that the spread is approxomitelly horizentally symmetric among the fitted values, however there are 2 outliers in the middle. 
 
 ```{r}
 par(mfrow=c(1,2))
