@@ -1,0 +1,356 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={A2- Exxercise1 and 2},
+            pdfauthor={geoffrey},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{A2- Exxercise1 and 2}
+\author{geoffrey}
+\date{February 29, 2020}
+
+\begin{document}
+\maketitle
+
+\hypertarget{exercise-1}{%
+\subsection{Exercise 1}\label{exercise-1}}
+
+\hypertarget{a.-randomized-design}{%
+\subsubsection{a. Randomized design}\label{a.-randomized-design}}
+
+A randomized design with two categorical factors, with
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  the first factor having three categorical levels and
+\item
+  the second factor having two levels and
+\item
+  having three samples for each unique categorie
+\end{enumerate}
+
+can be produced with the following R code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{I=}\DecValTok{3}\NormalTok{; J=}\DecValTok{2}\NormalTok{; N=}\DecValTok{3}
+\KeywordTok{rbind}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{I,}\DataTypeTok{each=}\NormalTok{N}\OperatorTok{*}\NormalTok{J),}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{J,N}\OperatorTok{*}\NormalTok{I),}\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{(N}\OperatorTok{*}\NormalTok{I}\OperatorTok{*}\NormalTok{J)))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{b.-plotting}{%
+\subsubsection{b. Plotting}\label{b.-plotting}}
+
+The boxplot and interaction plot below confirms our intuition:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  A cold environment causes a much slower decay
+\item
+  Wet bread has a much wider distribution (variance)
+\item
+  On average dry bread decays slower than wet bread
+\item
+  However, wet and cold (frozen) bread has the slowest decay
+\end{enumerate}
+
+From the non-parallel lines in the interaction plot and the wide
+distribution of the wet sample we conclude that the (wet) humidity
+amplifies the effect of the temperature and thus it can be explained by
+the strong interaction between the two factors (opposed to the errors in
+the measurement).
+
+\includegraphics{A2-exercise1-2_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\includegraphics{A2-exercise1-2_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\hypertarget{c.-two-way-anova}{%
+\subsubsection{c. Two way ANOVA}\label{c.-two-way-anova}}
+
+We have 3 hyphotheses here: H0:There is no main effect of first factor
+(humidity) H0:There is no main effect of second factor (environment)
+H0:There is no interactions between two factors From the two-way anova
+resulst below, we reject both hyphotheses which means both factors have
+a main effect on the decay time of bread, and the factors have an
+interaction effect.
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: hours
+##                      Df Sum Sq Mean Sq F value    Pr(>F)    
+## humidity              1  26912   26912  62.296 4.316e-06 ***
+## environment           2 201904  100952 233.685 2.461e-10 ***
+## humidity:environment  2  55984   27992  64.796 3.705e-07 ***
+## Residuals            12   5184     432                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{d.-coefficients-need-review}{%
+\subsubsection{d. Coefficients -- need review
+---}\label{d.-coefficients-need-review}}
+
+According to the means of squares, on avergae the environment has the
+biggest effect on the decay. However this can not be concluded so
+easily, because it is being compared to one base (the first categorie),
+instead of a more comprehensive annalysis.
+
+\begin{verbatim}
+##                                     Estimate Std. Error    t value     Pr(>|t|)
+## (Intercept)                              364   12.00000  30.333333 1.032769e-12
+## humiditywet                               72   16.97056   4.242641 1.142103e-03
+## environmentintermediate                 -124   16.97056  -7.306770 9.389760e-06
+## environmentwarm                         -100   16.97056  -5.892557 7.336887e-05
+## humiditywet:environmentintermediate     -180   24.00000  -7.500000 7.233671e-06
+## humiditywet:environmentwarm             -268   24.00000 -11.166667 1.073751e-07
+\end{verbatim}
+
+\hypertarget{e.-diagnostics}{%
+\subsubsection{e. Diagnostics}\label{e.-diagnostics}}
+
+The first requirements is that for each unique categorie, there should
+be at least 2 samples, which is the case. Then the most important
+requirement is that the data among the factors should approximiatly have
+equal variances. This has been tested in b). and the conclusions was
+that they approximitally were the same. A different test we can do after
+the ANOVA test, is check whether the error is normally distributed,
+which is to be expected of a random variable. In the following QQplot it
+can be seen that the residuals are approximiatly normally distributed.
+And in the fitted residuals plot it can be seen that the spread is
+approxomitelly horizentally symmetric among the fitted values, however
+there are 2 outliers in the middle.
+
+\includegraphics{A2-exercise1-2_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\hypertarget{exercise-2}{%
+\subsection{Exercise 2}\label{exercise-2}}
+
+\hypertarget{a.-randomized-block-design}{%
+\subsubsection{a. Randomized block
+design}\label{a.-randomized-block-design}}
+
+The following code generates a random block design with five blocks, a
+factor with three levels, and one sample per unique categorie.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{B=}\DecValTok{5}\NormalTok{;}
+\NormalTok{if1 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{)}
+\NormalTok{if2 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{6}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{if3 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{11}\OperatorTok{:}\DecValTok{15}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) }\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(if1[i], if2[i], if3[i]))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{b.-graphical-pre-analysis}{%
+\subsubsection{b. Graphical
+pre-analysis}\label{b.-graphical-pre-analysis}}
+
+The boxplots below suggest that indeed the skil level and the interfaces
+matter for the search time. Where skill level 1 is indeed the fastest,
+and interface 1 is the fastest from the three interfaces. And from the
+interaction plots below it can be observed that overall the factors have
+the same pattern; all lines start in the lower left corner and end
+towwards the upper right corner. However, they are not perfectly
+parallel, this can be explained by the small sample sizes which causes
+local irregularities. Thus we conclude that there is no interaction
+between the two factors.
+
+\includegraphics{A2-exercise1-2_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{A2-exercise1-2_files/figure-latex/unnamed-chunk-8-2.pdf}
+
+\hypertarget{c.-anova-with-1-block-factor}{%
+\subsubsection{c. Anova with 1 block
+factor}\label{c.-anova-with-1-block-factor}}
+
+From the ANOVA results below it can be concluded that the search time is
+not the same for all interfaces. Futhermore, we can estimate the time it
+takes for a user with skill level 3 to find a product using interface 2
+by looking at the summary table and adding the coeffcients of these two
+categories to the incercept. Thus that would be 15.015+3.033+2.7=20.748.
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: time
+##           Df Sum Sq Mean Sq F value  Pr(>F)  
+## interface  2 50.465 25.2327  7.8237 0.01310 *
+## skill      4 80.051 20.0127  6.2052 0.01421 *
+## Residuals  8 25.801  3.2252                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = time ~ interface + skill, data = search)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.5733 -0.6967  0.3867  1.0567  1.7867 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   15.013      1.227  12.238 1.85e-06 ***
+## interface2     2.700      1.136   2.377  0.04474 *  
+## interface3     4.460      1.136   3.927  0.00438 ** 
+## skill2         1.300      1.466   0.887  0.40118    
+## skill3         3.033      1.466   2.069  0.07238 .  
+## skill4         5.300      1.466   3.614  0.00684 ** 
+## skill5         6.100      1.466   4.160  0.00316 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.796 on 8 degrees of freedom
+## Multiple R-squared:  0.8349, Adjusted R-squared:  0.7111 
+## F-statistic: 6.745 on 6 and 8 DF,  p-value: 0.008395
+\end{verbatim}
+
+\hypertarget{d.-diagnostics}{%
+\subsubsection{d. Diagnostics}\label{d.-diagnostics}}
+
+The QQ-plot of the residuals below looks normally distributed, which is
+good. The fitted residuals do not depict any outliers.
+
+\includegraphics{A2-exercise1-2_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\hypertarget{e.-friedmann-test}{%
+\subsubsection{e. Friedmann test}\label{e.-friedmann-test}}
+
+The result of the Friedman test is the same as the ANOVA: we reject the
+H0, thus there is a difference in sesarch times.
+
+\begin{verbatim}
+## 
+##  Friedman rank sum test
+## 
+## data:  search$time, search$interface and search$skill
+## Friedman chi-squared = 6.4, df = 2, p-value = 0.04076
+\end{verbatim}
+
+\hypertarget{f.-one-way-anova}{%
+\subsubsection{f. One-way ANOVA}\label{f.-one-way-anova}}
+
+The one-way ANOVA returns no significant difference in the search time
+between the interfaces. This result is not very usefull, because 1) we
+removed a lot of information from the model and 2) the model now assumes
+that the block is a random selection of all available blocks, which is
+not the case because the blocks were fixed/predetermined.
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: time
+##           Df  Sum Sq Mean Sq F value  Pr(>F)  
+## interface  2  50.465  25.233  2.8605 0.09642 .
+## Residuals 12 105.852   8.821                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\end{document}
