@@ -24,13 +24,38 @@ par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
 ```
 <!-- Investigate the problem of potential and influence points-->
-A potential point is an outlier in an explanatory variable. We study the effect by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. 
+A potential point is an outlier in an explanatory variable. We study the effect by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. <!-- QUESTION: this is supposed to analyzed for the model, but so far, no model has been constructed. And, if observations are cobcluded to be influence points, what action to take? -->
 
 <!-- Investigate the problem of collinearity-->
 Collinearity is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot between two variables or calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables expend, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at this table, we observe that all the combinations of the variables expend, lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a strong collinear relation. The variable bad has a weaker collinear relation with the variables expend, lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
-
 ```{r}
 round(cor(data[,2:7]),2)
 ```
 
 **b)**
+
+(?) The errors are viewed as a random sample from a normal population
+
+(?) Null hypotheses: Bj = 0 that the jth explanatory variable does not influence the outcome we also want to estimate the parameters Bjs
+
+<!-- Fit a linear regression model to the data -->
+<!-- Use both the step-up and the step-down method to find the best model -->
+In order to fit a linear regression model to the data, we use both the step-up and the step-down method. First, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and select the explanatory variable that results in the highest determination coefficient. Afterwards, in each iteration, one explanatory variable is added and the determination coefficient of the new model is calculated.
+
+```{r}
+
+```
+
+Second, we use the step-down method. This method start with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed.
+
+```{r}
+
+```
+
+<!-- If step-up and step-down yield two different models, choose one and motivate your choice -->
+
+Choose a model with a small number of explanatory variables. Choose a model that intuitively/practically makes sense.
+
+**c)**
+
+<!-- Check the model assumptions by using relevant diagnostic tools -->
