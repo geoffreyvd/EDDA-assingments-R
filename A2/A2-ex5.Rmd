@@ -1,0 +1,36 @@
+---
+title: "Assignment 5"
+author: "Group 29"
+date: "3/2/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 5
+
+In our regression analysis, the respond variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
+
+**a)**
+<!-- Make some graphical summaries of the data -->
+First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. Looking at the plots, we observe that expend, laywers, employ and pop all approximate linear relationship among the the variables. Furthermore, state and crime have nonlinear relationhsips with the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Moving on to the histograms, it is interesting to see that almost all variables (expend, bad, laywers, employ and pop) follow a similar pattern, namely, the lowest value appear frequently and as the value increases, the frequency decreases steeply. Except for a few outliers at the end of the histogram that break the pattern. In contrast, the variable crime shows a different pattern. The values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
+
+```{r}
+data=read.table(file="expensescrime.txt",header=TRUE)
+plot(data)
+par(mfrow=c(1,ncol(data)-1)) # minus the state column
+for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
+```
+<!-- Investigate the problem of potential and influence points-->
+A potential point is an outlier in an explanatory variable. We study the effect by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. 
+
+<!-- Investigate the problem of collinearity-->
+Collinearity is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot between two variables or calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables expend, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at this table, we observe that all the combinations of the variables expend, lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a strong collinear relation. The variable bad has a weaker collinear relation with the variables expend, lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
+
+```{r}
+round(cor(data[,2:7]),2)
+```
+
+**b)**
