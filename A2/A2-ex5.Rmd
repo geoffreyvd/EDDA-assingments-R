@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Exercise 5
 
-In our regression analysis, the respond variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
+In our regression analysis, the response variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
 
 **a)**
 <!-- Make some graphical summaries of the data -->
@@ -24,7 +24,7 @@ par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
 ```
 <!-- Investigate the problem of potential and influence points-->
-A potential point is an outlier in an explanatory variable. We study the effect by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. <!-- QUESTION: this is supposed to analyzed for the model, but so far, no model has been constructed. And, if observations are cobcluded to be influence points, what action to take? -->
+A potential point is an outlier in an explanatory variable. We study the effect by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. <!-- QUESTION: this is supposed to analyzed for the model, but so far, no model has been constructed. And, if observations are concluded to be influence points, what action to take? -->
 
 <!-- Investigate the problem of collinearity-->
 Collinearity is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot between two variables or calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables expend, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at this table, we observe that all the combinations of the variables expend, lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a strong collinear relation. The variable bad has a weaker collinear relation with the variables expend, lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
@@ -34,28 +34,99 @@ round(cor(data[,2:7]),2)
 
 **b)**
 
-(?) The errors are viewed as a random sample from a normal population
-
-(?) Null hypotheses: Bj = 0 that the jth explanatory variable does not influence the outcome we also want to estimate the parameters Bjs
-
 <!-- Fit a linear regression model to the data -->
 <!-- Use both the step-up and the step-down method to find the best model -->
-In order to fit a linear regression model to the data, we use both the step-up and the step-down method. First, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and select the explanatory variable that results in the highest determination coefficient. Afterwards, in each iteration, one explanatory variable is added and the determination coefficient of the new model is calculated.
+In order to fit a linear regression model to the data, we use both the step-up and the step-down method. First, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient. The determination coefficients (R-squared) for each explanatory variable are shown in the table below.
+
+| Explantory Variable | bad    | crime  | laywers | employ | pop    | employ + bad | employ + crime | employ + bad + crime |
+|---------------------|--------|--------|---------|--------|--------| -------------|--------------- | --------------- |
+| Multiple R-squared  | 0.6964 | 0.1119 | 0.9373  | 0.954  | 0.9073 | 0.9551       | 0.9551         | 0.9568        |
+
+Employ has the highest determination coefficient (R-squared is equal to 0.954) and is thus selected. We combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in a similar value of R-squared, namely 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add which results in the last possible option: a model of employ, bad and crime combined. This result in a determination coefficient of 0.9568 and a model: expense = -2.857e+02 + 4.979e-02 * employ - 1.391e+00 * bad + 3.810e-02 * crime + error. We have to be carefull as there is a considerable correlation between employ and bad. Therefore, the model that is constructed with the variables employ and crime (expense = -2.484e+02 + 4.630e-02 * employ + 2.962e-02 * crime + error) might be the best option.
 
 ```{r}
-
+#First round
+summary(lm(expend~bad,data=data))
+summary(lm(expend~crime,data=data))
+summary(lm(expend~lawyers,data=data))
+summary(lm(expend~employ,data=data))
+summary(lm(expend~pop,data=data))
+#Second round
+summary(lm(expend~employ+bad,data=data))
+summary(lm(expend~employ+crime,data=data))
+#Third round
+summary(lm(expend~employ+bad+crime,data=data))
 ```
 
-Second, we use the step-down method. This method start with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed.
+Second, we use the step-down method. This method start with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed. This time, we try the model with all variables, regardless of collinearity. This results in a determination coefficient of 0.9675. When removing one variable, all the p-values are similar and smaller than 2.2e-16. Thus, according to the algorithm no variable should be removed.
+
+| Explantory Variables | bad + crime + lawyers + employ + pop    | crime + lawyers + employ + pop   | bad + lawyers + employ + pop  | bad + crime + employ + pop  | bad + crime + lawyers + pop     | bad  crime + lawyers + employ  | 
+|---------------------|--------|--------|--------|--------| -------------|--------------- | 
+| Multiple R-squared  | 0.9675 | 0.9606 | 0.9666  | 0.9615  |  0.9607      | 0.964        |
+
+We try one more time but excluding all the linear corelated combinations. Again, no p-value is larger than 0.05 and therefore no variable has to be removed. The step-down method stops here. Of these models, the combination bad + crime + employ has the highest determination coefficient
+ (0.9582). This is a similar outcome to the previous exercise.
+
+| Explantory Variables | bad + crime + employ    | bad + crime + lawyers   | bad + crime + pop | 
+|---------------------|--------|--------|--------|
+| Multiple R-squared  | 0.9568 | 0.9414 | 0.9321  |
 
 ```{r}
+#First round
+summary(lm(expend~bad+crime+lawyers+employ+pop,data=data))
+#Second round
+summary(lm(expend~crime+lawyers+employ+pop,data=data))
+summary(lm(expend~bad+lawyers+employ+pop,data=data))
+summary(lm(expend~bad+crime+employ+pop,data=data))
+summary(lm(expend~bad+crime+lawyers+pop,data=data))
+summary(lm(expend~bad+crime+lawyers+employ,data=data))
+
+#Without collinear variables
+#First round
+summary(lm(expend~bad+crime+employ,data=data))
+summary(lm(expend~bad+crime+lawyers,data=data))
+summary(lm(expend~bad+crime+pop,data=data))
 
 ```
 
 <!-- If step-up and step-down yield two different models, choose one and motivate your choice -->
 
-Choose a model with a small number of explanatory variables. Choose a model that intuitively/practically makes sense.
+When excluding the collinear variables, the step-up and step-down methods resulted in a similar model, namely, the one constructed by the variables employ, bad and crime. Furthermore, the step-up model also resulted in another interesting model, namely, the one constructed by the variables employ and crime. The R-squared value of the first model is higher (0.9568 compared to the R-squared value of 0.9551 the model constructed by employ and crime), however, the difference is relatively small. Moreover, the model using employ and crime has fewer variables which have no collinear relation. Therefore, the model expense = -2.484e+02 + 4.630e-02 * employ + 2.962e-02 * crime + error is prefered. 
 
 **c)**
 
 <!-- Check the model assumptions by using relevant diagnostic tools -->
+
+We check the model assumptions (linearity of the relation and normality of the errors) using both graphical and numerical tools. 
+
+<!-- #5 scatterplot of residuals against Y -->
+
+
+<!-- #6 normal QQ-plot of the residuals and Shapiro-Wilk's method -->
+We cannot assume normality.
+
+```{r}
+#1 Scatter plot of Y against each X k separately.
+# done in previous exercise
+
+#2 Scatter plot of residuals against each Xk in the model separately.
+expendlm = lm(expend~employ+crime,data=data)
+plot(residuals(expendlm),data[,4])
+plot(residuals(expendlm),data[,6])
+
+#3 Added variable plot of residuals of Xj against residuals of Y with omitted Xj
+
+
+#4 Scatter plot of residuals against each Xk not in the model separately
+plot(residuals(expendlm),data[,3])
+plot(residuals(expendlm),data[,5])
+plot(residuals(expendlm),data[,7])
+
+#5 scatterplot of residuals against Y and Y^
+plot(residuals(expendlm),data[,2])
+plot(residuals(expendlm),fitted(expendlm))
+
+#6 normal QQ-plot of the residuals and Shapiro-Wilk's method
+qqnorm(residuals(expendlm))
+shapiro.test(residuals(expendlm))
+
