@@ -10,15 +10,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Exercise 5
-
 In our regression analysis, the response variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
 
 **a)**
 <!-- Make some graphical summaries of the data -->
-First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. Looking at the plots, we observe that expend, laywers, employ and pop all approximate linear relationship among the the variables. Furthermore, state and crime have nonlinear relationhsips with the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Moving on to the histograms, it is interesting to see that almost all variables (expend, bad, laywers, employ and pop) follow a similar pattern, namely, the lowest value appear frequently and as the value increases, the frequency decreases steeply. Except for a few outliers at the end of the histogram that break the pattern. In contrast, the variable crime shows a different pattern. The values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
+First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. 
+Looking at the plots, we observe that expend, laywers, employ and pop all approximate linear relationship among the the variables. Furthermore, state and crime have nonlinear relationhsips with the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. 
+Moving on to the histograms, it is interesting to see that almost all variables (expend, bad, laywers, employ and pop) follow a similar pattern, namely, the lowest value appear frequently and as the value increases, the frequency decreases steeply. Except for a few outliers at the end of the histogram that break the pattern. In contrast, the variable crime shows a different pattern. The values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
 
 ```{r}
 data=read.table(file="expensescrime.txt",header=TRUE)
+data
 plot(data)
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
@@ -36,13 +38,13 @@ round(cor(data[,2:7]),2)
 
 <!-- Fit a linear regression model to the data -->
 <!-- Use both the step-up and the step-down method to find the best model -->
-In order to fit a linear regression model to the data, we use both the step-up and the step-down method. First, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient. The determination coefficients (R-squared) for each explanatory variable are shown in the table below.
+First, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient. The determination coefficients (R-squared) for each explanatory variable are shown in the table below.
 
 | Explantory Variable | bad    | crime  | laywers | employ | pop    | employ + bad | employ + crime | employ + bad + crime |
 |---------------------|--------|--------|---------|--------|--------| -------------|--------------- | --------------- |
 | Multiple R-squared  | 0.6964 | 0.1119 | 0.9373  | 0.954  | 0.9073 | 0.9551       | 0.9551         | 0.9568        |
 
-Employ has the highest determination coefficient (R-squared is equal to 0.954) and is thus selected. We combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in a similar value of R-squared, namely 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add which results in the last possible option: a model of employ, bad and crime combined. This result in a determination coefficient of 0.9568 and a model: expense = -2.857e+02 + 4.979e-02 * employ - 1.391e+00 * bad + 3.810e-02 * crime + error. We have to be carefull as there is a considerable correlation between employ and bad. Therefore, the model that is constructed with the variables employ and crime (expense = -2.484e+02 + 4.630e-02 * employ + 2.962e-02 * crime + error) might be the best option.
+Employ has the biggest determination coefficient (R-squared is equal to 0.954) and is thus selected. We combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in a similar value of R-squared, namely 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add which results in the last possible option: a model of employ, bad and crime combined. This result in a determination coefficient of 0.9568 and a model: expense = -2.857e+02 + 4.979e-02 * employ - 1.391e+00 * bad + 3.810e-02 * crime + error. We have to be carefull as there is a considerable correlation between employ and bad. Therefore, the model that is constructed with the variables employ and crime (expense = -2.484e+02 + 4.630e-02 * employ + 2.962e-02 * crime + error) might be the best option.
 
 ```{r}
 #First round
@@ -60,6 +62,9 @@ summary(lm(expend~employ+bad+crime,data=data))
 
 Second, we use the step-down method. This method start with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed. This time, we try the model with all variables, regardless of collinearity. This results in a determination coefficient of 0.9675. When removing one variable, all the p-values are similar and smaller than 2.2e-16. Thus, according to the algorithm no variable should be removed.
 
+#Yizhen - 
+#after first round, crime should be removed, then model become: summary(lm(expend~bad+lawyers+employ+pop,data=data)), after2 3 4 round, we stop. model now is summary(lm(expend~lawyers+employ, data=data)). expense = -1.107e+02 + 2.686e-02*laywers + 2.971e-02*employ + error
+
 | Explantory Variables | bad + crime + lawyers + employ + pop    | crime + lawyers + employ + pop   | bad + lawyers + employ + pop  | bad + crime + employ + pop  | bad + crime + lawyers + pop     | bad  crime + lawyers + employ  | 
 |---------------------|--------|--------|--------|--------| -------------|--------------- | 
 | Multiple R-squared  | 0.9675 | 0.9606 | 0.9666  | 0.9615  |  0.9607      | 0.964        |
@@ -75,11 +80,17 @@ We try one more time but excluding all the linear corelated combinations. Again,
 #First round
 summary(lm(expend~bad+crime+lawyers+employ+pop,data=data))
 #Second round
+summary(lm(expend~bad+lawyers+employ+pop,data=data))
 summary(lm(expend~crime+lawyers+employ+pop,data=data))
 summary(lm(expend~bad+lawyers+employ+pop,data=data))
 summary(lm(expend~bad+crime+employ+pop,data=data))
 summary(lm(expend~bad+crime+lawyers+pop,data=data))
 summary(lm(expend~bad+crime+lawyers+employ,data=data))
+
+#Yizhen - 2, 3, 4 round then stop
+#summary(lm(expend~bad+lawyers+employ+pop,data=data)) 
+#summary(lm(expend~bad+lawyers+employ, data=data))
+#summary(lm(expend~lawyers+employ, data=data))
 
 #Without collinear variables
 #First round
