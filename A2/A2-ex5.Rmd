@@ -11,7 +11,7 @@ In our regression analysis, the response variable is "expend" and the explanator
 
 **a)**
 <!-- Make some graphical summaries of the data -->
-First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. Looking at the plots, we observe that expend, lawyers, employ and pop all approximate a linear relationship with all the other variables. Furthermore, state and crime have nonlinear relationhsips with all the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Looking at the histograms, it is interesting to see that almost all variables (expend, bad, lawyers, employ and pop) follow a similar pattern, namely, the lowest value appears frequently and as the value increases, the frequency decreases steeply. Except for a few outliers of frequently occuring high values. In contrast, the variable crime shows a different pattern. Namely, the values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
+First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. Looking at the plots, we observe that expend, lawyers, employ and pop all approximate a linear relationship with each other. Furthermore, state and crime have nonlinear relationhsips with all the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Looking at the histograms, it is interesting to see that almost all variables (expend, bad, lawyers, employ and pop) follow a similar pattern, namely, the lowest value appears frequently and as the value increases, the frequency decreases steeply. Except for a few outliers of frequently occuring high values. In contrast, the variable crime shows a different pattern. Namely, the values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
 <!-- Scatter plots -->
 ```{r fig.width=8, fig.height=4, echo=FALSE}
 data=read.table(file="expensescrime.txt",header=TRUE)
@@ -21,6 +21,17 @@ plot(data)
 ```{r fig.width=8, fig.height=2, echo=FALSE}
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
+```
+
+To build an intuition of the linear relationship between the depandable variable (expand) and its explanatory variable, we have plotted the explanatory variables against the dependaple variable below. These are the same plots as from the first plot with all factors plotted against each other, but now we can take a closer look. From the plots we can see a strong linear relationship between the dependable expend and 4 of the five factors: bad, lawyers, employ and pop. However we see very big outliers, which will have to be adjusted for, otherwise they will have a very big weight in the factor coefficient from the linear regression.
+```{r fig.width=8, fig.height=4, echo=FALSE}
+
+par(mfrow=c(1,3))
+plot(data$expend, data$bad)
+plot(data$expend, data$crime)
+plot(data$expend, data$lawyers)
+plot(data$expend, data$employ)
+plot(data$expend, data$pop)
 ```
 <!-- Investigate the problem of potential and influence points-->
 A potential point is an outlier in an explanatory variable. The effect can be studied by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. As we have not constructed a model yet, we analyse the potential and influence points of our chosen model in c).
