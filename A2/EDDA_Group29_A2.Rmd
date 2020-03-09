@@ -166,7 +166,9 @@ t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
 
 ## Exercise 4
 
-**a)** We created a dataframe that contains two columns: nausea and medicine. For patients who suffer from nausea, the variable nausea is set to 1. For patients who do not suffer from nausea, the variable is set to 0. We validated that the newly constructed dataframe is simalar to the dataset by comparing the output of the xtabs function to the original data.
+**a)** <!-- Make a data.frame in R consisting of two columns and 304 rows. One column should contain an indicator
+whether or not the patient in that row suffered from nausea, and the other column should indicate the
+medicin. Make sure these columns match correctly. Study the outcome of xtabs(∼medicin+naus).--> We created a dataframe that contains two columns: nausea and medicine. For patients who suffer from nausea, the variable nausea is set to 1. For patients who do not suffer from nausea, the variable is set to 0. We validated that the newly constructed dataframe is simalar to the dataset by comparing the output of the xtabs function to the original data.
 
 ```{r}
 data=read.table("nauseatable.txt",header=TRUE)
@@ -178,29 +180,30 @@ patientdata=data.frame(nausea,medicine)
 xtabs(~medicine+nausea,data=patientdata)
 ```
 
-**b)** <!-- Perform a permutation test in order to test whether the different medicines work equally well against nausea. Permute the medicin labels for this purpose. Use as test statistic the chisquare test statistic for contingency tables, which can be extracted from the output of the command chisq.test: chisq.test(xtabs(∼medicin+nausea))[[1]] --> We perform a permutation test to test $H_0$ :  the medicines work equally well against nausea. We use the chisquare test statistic which is equal to 6.63.
-
-We observe that the p-value is equal to X, this is ? than the significance level of 0.05. Therefore, $H_0$ is ? rejected which means that the medicines do not work equally well against nausea.
+**b)** <!-- Perform a permutation test in order to test whether the different medicines work equally well against nausea. Permute the medicin labels for this purpose. Use as test statistic the chisquare test statistic for contingency tables, which can be extracted from the output of the command chisq.test: chisq.test(xtabs(∼medicin+nausea))[[1]] --> We perform a permutation test to test $H_0$ :  the medicines work equally well against nausea. We use the chisquare test statistic which is equal to 6.63. We observe that the p-value is equal to X, this is ? than the significance level of 0.05. Therefore, $H_0$ is ? rejected which means that the medicines do not work equally well against nausea.
 
 ```{r fig.width=6, fig.height=3}
-medication=factor(patientdata$medicine)
+test_statistic=chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))[[1]];test_statistic
+
+
+
 attach(patientdata)
 B=1000
 tstar=numeric(B)
 for (i in 1:B) {
-  medicationstar=sample(medication) # permute medicine lables
-    tstar[i] = chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))[[1]] }
-test_statistic=mystat(lm(patientdata$nausea~patientdata$medicine));test_statistic
+  patientstar=sample(patientdata,size=100) # permute medicine lables
+  tstar[i] = chisq.test(xtabs(~patientstar$medicine+patientstar$nausea))[[1]];print(tstar[i])}
+test_statistic=chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))[[1]];test_statistic
 hist(tstar)
-pl=sum(tstar<myt)/B
+pl=sum(tstar<myt)/B;pl
 pr=sum(tstar>myt)/B
-pl
 ```
 
-**c)** We could see from chi-squared test that the p-value is equal to 0.03643, this is smaller than 0.05, therefore, $H_0$ should be rejected. The p-values of both tests are close to each other. In conclusion, they use different methods but the results are the same.
+**c)** <!-- Compare the p-value found by the permutation test with the p-value found from the chisquare test for contingency tables. Explain the difference/equality of the two p-values. --> 
+When performing the chi-squared test, we observe that the p-value is equal to 0.03643. This is smaller than the significance level of 0.05, therefore, $H_0$ (the medicines work equally well against nausea) should be rejected.
 
 ```{r}
-chisq.test(xtabs(~nausea_table$medicine+nausea_table$nausea))
+chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))
 ```
 
 ## Exercise 5
