@@ -166,45 +166,41 @@ t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
 
 ## Exercise 4
 
-**a)** We observe that the result is the same as the dataset "nauseatable.txt", so the dataframe we created is correct. 
+**a)** We created a dataframe that contains two columns: nausea and medicine. For patients who suffer from nausea, the variable nausea is set to 1. For patients who do not suffer from nausea, the variable is set to 0. We validated that the newly constructed dataframe is simalar to the dataset by comparing the output of the xtabs function to the original data.
 
-```{r results='hide'}
-nausea = read.table("nauseatable.txt", header = TRUE)
-#We create a dataframe that contains 2 columns: nausea, medicine
-#We set patients who suffered from nausea as 1, otherwise 0
-nausea=c(rep(0,times=100), rep(1,times=52),rep(0, times=32), rep(1, times=35),rep(0, times=48), rep(1, times=37))
-medicine=c(rep("Chlorpromazine", times=152),rep("Pentobarbital(100mg)", times=67),rep("Pentobarbital(150mg)", times=85))
-newNausea = data.frame(nausea,medicine); newNausea
-xtabs(~medicine+nausea, data = newNausea) 
+```{r}
+data=read.table("nauseatable.txt",header=TRUE)
+nausea=c(rep(0,times=100),rep(1,times=52),rep(0,times=32),rep(1,times=35),rep(0,times=48),
+  rep(1,times=37))
+medicine=c(rep("Chlorpromazine",times=152),rep("Pentobarbital (100mg)",times=67),
+  rep("Pentobarbital (150mg)",times=85))
+patientdata=data.frame(nausea,medicine)
+xtabs(~medicine+nausea,data=patientdata)
 ```
 
-**b)** We observe that the p-value is 0.041, this is less than 0.05. Therefore, $H_0$ should be rejected which means that the medicine does not work equally well against nausea. By performing the chi-squared test, we get the result 6.62. We could use this to calculate the p-value. By performing the permutation test, we obtain the result 71.82. This test uses different values to calculate the final p-value.
+**b)** <!-- Perform a permutation test in order to test whether the different medicines work equally well against nausea. Permute the medicin labels for this purpose. Use as test statistic the chisquare test statistic for contingency tables, which can be extracted from the output of the command chisq.test: chisq.test(xtabs(∼medicin+nausea))[[1]] --> We perform a permutation test to test $H_0$ :  the medicines work equally well against nausea. We use the chisquare test statistic which is equal to 6.63.
 
-```{r results='hide', fig.width=6, fig.height=3}
-#Permutation test
-label_medic = factor(newNausea$medicine)
-nausdata = data.frame(nausea=as.vector(newNausea$nausea), label_medic)
-attach(nausdata)
-mystat=function(x) sum(residuals(x)^2)
+We observe that the p-value is equal to X, this is ? than the significance level of 0.05. Therefore, $H_0$ is ? rejected which means that the medicines do not work equally well against nausea.
+
+```{r fig.width=6, fig.height=3}
+medication=factor(patientdata$medicine)
+attach(patientdata)
 B=1000
 tstar=numeric(B)
-for(i in 1:B){
-  treatstar = sample(label_medic)
-  tstar[i] = mystat(lm(nausea~treatstar))
-}
-myt = mystat(lm(newNausea$nausea~newNausea$medicine))
+for (i in 1:B) {
+  medicationstar=sample(medication) # permute medicine lables
+    tstar[i] = chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))[[1]] }
+test_statistic=mystat(lm(patientdata$nausea~patientdata$medicine));test_statistic
 hist(tstar)
-myt
 pl=sum(tstar<myt)/B
 pr=sum(tstar>myt)/B
 pl
-#chisquare test
-chisq.test(xtabs(~newNausea$medicine+newNausea$nausea))[[1]]
 ```
 
 **c)** We could see from chi-squared test that the p-value is equal to 0.03643, this is smaller than 0.05, therefore, $H_0$ should be rejected. The p-values of both tests are close to each other. In conclusion, they use different methods but the results are the same.
+
 ```{r}
-chisq.test(xtabs(~newNausea$medicine+newNausea$nausea))
+chisq.test(xtabs(~nausea_table$medicine+nausea_table$nausea))
 ```
 
 ## Exercise 5
@@ -348,5 +344,17 @@ qqnorm(residuals(expendlm))
 #shapiro.test(residuals(expendlm))
 ```
 
-## Appendix
+## Appendix: R code
+```{r echo=TRUE, eval=FALSE}
 
+# --- Exercise 4 --- #
+
+# A
+nausea_data=read.table("nauseatable.txt",header=TRUE)
+nausea=c(rep(0,times=100),rep(1,times=52),rep(0,times=32),rep(1,times=35),rep(0,times=48),
+  rep(1,times=37))
+medicine=c(rep("Chlorpromazine",times=152),rep("Pentobarbital (100mg)",times=67),
+  rep("Pentobarbital (150mg)",times=85))
+nausea_table=data.frame(nausea,medicine)
+xtabs(~medicine+nausea,data=nausea_table)
+```
