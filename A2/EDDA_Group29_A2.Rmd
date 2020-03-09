@@ -10,63 +10,44 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=8, fig.height=4) 
 ```
 
+An overview of the R code is shown in the Appendix on page X.
+
 ## Exercise 1
 
-**a)** A randomized design with two categorical factors, with 
+**a)** A randomized design with two categorical factors, with (1) the first factor having three categorical levels, (2) the second factor having two levels and (3) having three samples for each unique category, can be produced with the following R code:
 
-1. the first factor having three categorical levels and
-2. the second factor having two levels and
-3. having three samples for each unique categorie
-
-can be produced with the following R code:
 ``` {r echo=TRUE, eval=FALSE}
 I=3; J=2; N=3
 rbind(rep(1:I,each=N*J),rep(1:J,N*I),sample(1:(N*I*J)))
 ```
 
-**b)** The boxplot and interaction plot below confirms our intuition:
+**b)** The boxplot and interaction plot below confirms our intuition: (1) a cold environment causes a much slower decay, (2) wet bread has a much wider distribution (variance), (3) on average dry bread decays slower than wet bread, however, (4) wet and cold (frozen) bread has the slowest decay. From the non-parallel lines in the interaction plot and the wide distribution of the wet sample, we conclude that the (wet) humidity amplifies the effect of the temperature and it can thus be explained by the strong interaction between the two factors (opposed to the errors in the measurement).
 
-1. A cold environment causes a much slower decay
-2. Wet bread has a much wider distribution (variance)
-3. On average dry bread decays slower than wet bread
-4. However, wet and cold (frozen) bread has the slowest decay
-
-From the non-parallel lines in the interaction plot and the wide distribution of the wet sample we conclude that the (wet) humidity amplifies the effect of the temperature and thus it can be explained by the strong interaction between the two factors (opposed to the errors in the measurement).
-
-```{r}
+```{r fig.width=8, fig.height=3}
 bread = read.table("bread.txt", header = TRUE)
-
-par(mfrow=c(1,2))
-boxplot(hours ~ humidity, data = bread)
-boxplot(hours ~ environment, data = bread)
+par(mfrow=c(1,3))
+boxplot(hours ~ humidity, data = bread, ylab = "Hours")
+boxplot(hours ~ environment, data = bread, ylab = "Hours")
+interaction.plot(bread$environment, bread$humidity, bread$hours, xlab = "Temperature", ylab = "Hours", trace.label = "Humidity")
 ```
 
-```{r}
-  
-interaction.plot(bread$environment, bread$humidity, bread$hours,
-        xlab = "Temperature", ylab = "Hours", trace.label = "Humidity")
-```
+**c)** We have three null hyphotheses: (1) $H_0$ : there is no main effect of first factor (humidity), (2) $H_0$ : there is no main effect of second factor (environment) and (3) $H_0$ : there is no interactions between the two factors.
+From the two-way ANOVA result below, we reject all null hyphotheses. This means that both factors have a main effect on the decay time of bread, and the factors have an interaction effect.
 
-**c)** We have 3 hyphotheses here:
-H0:There is no main effect of first factor (humidity)
-H0:There is no main effect of second factor (environment)
-H0:There is no interactions between two factors
-From the two-way anova resulst below, we reject both hyphotheses which means both factors have a main effect on the decay time of bread, and the factors have an interaction effect.
 ```{r}
 breadaov=lm(hours~humidity*environment, data = bread); 
 anova(breadaov)
 ```
 
-**d)**-- need review ---
-According to the means of squares, on avergae the environment has the biggest effect on the decay. However this can not be concluded so easily, because it is being compared to one base (the first categorie), instead of a more comprehensive annalysis.
+**d)** <!-- Need review --> According to the means of squares, on average the environment has the largest effect on the decay. However, this can not easily be concluded as it is being compared to one base (the first category), instead of a more comprehensive analysis.
 
 ```{r}
 summary(breadaov)$coefficients
 ```
 
-**e)** The first requirements is that for each unique categorie, there should be at least 2 samples, which is the case. Then the most important requirement is that the data among the factors should approximiatly have equal variances. This has been tested in b). and the conclusions was that they approximitally were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which is to be expected of a random variable. In the following QQplot it can be seen that the residuals are approximiatly normally distributed. And in the fitted residuals plot it can be seen that the spread is approxomitelly horizentally symmetric among the fitted values, however there are 2 outliers in the middle. 
+**e)** The first requirement is that for each unique category, there should be at least 2 samples, which is the case. Then, the most important requirement is that the data among the factors should approximately have equal variances. This has been tested in b) and the conclusion was that they approximately were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which can be expected from a random variable. In the QQ-plot, it can be seen that the residuals are approximately normally distributed. In the fitted residuals plot, it can be seen that the spread is approximately horizontally symmetric among the fitted values, however, there are 2 outliers in the middle. 
 
-```{r}
+```{r fig.width=8, fig.height=3}
 par(mfrow=c(1,2))
 qqnorm(residuals(breadaov))
 plot(fitted(breadaov),residuals(breadaov))
@@ -74,7 +55,7 @@ plot(fitted(breadaov),residuals(breadaov))
 
 ## Exercise 2
 
-**a)** The following code generates a random block design with five blocks, a factor with three levels, and one sample per unique categorie.
+**a)** The following code generates a random block design with five blocks, a factor with three levels and one sample per unique category.
 
 ```{r echo=TRUE, eval=FALSE}
 B=5;
@@ -84,93 +65,70 @@ if3 = sample(11:15)
 for (i in 1:B) print(c(if1[i], if2[i], if3[i]))
 ```
 
-**b)** The boxplots below suggest that indeed the skill level and the interfaces matter for the search time. Where skill level 1 is indeed the fastest, and interface 1 is the fastest from the three interfaces.
-And from the interaction plots below it shows clear interaction effects and the overall the factors have the same pattern; all lines start in the lower left corner and end towwards the upper right corner. However, they are not perfectly parallel, this can be explained by the small sample sizes which causes local irregularities. Thus we conclude that there is no interaction between the two factors. 
+**b)** The boxplots below suggest that indeed the skill level and the interfaces matter for the search time. We see that skill level 1 and interface 1 are the fastest. From the interaction plots below, we observe clear interaction effects. Overall, the factors have the same pattern, namely, all lines start in the lower left corner and end towards the upper right corner. However, they are not perfectly parallel, this can be explained by the small sample sizes which cause local irregularities. Thus, we conclude that there is no interaction between the two factors.
 
-```{r}
+```{r fig.width=8, fig.height=6}
 search = read.table("search.txt", header = TRUE)
-
-par(mfrow=c(1,2))
+par(mfrow=c(2,2))
 boxplot(time~skill, data=search)
 boxplot(time~interface, data=search)
-
-interaction.plot(search$skill,search$interface, search$time,
-                 xlab = "Skill level", ylab = "Time", trace.label = "Interface")
-interaction.plot(search$interface,search$skill, search$time,
-                 xlab = "Interface", ylab = "Time", trace.label = "Skill level")
-
+interaction.plot(search$skill,search$interface, search$time, xlab = "Skill level", ylab = "Time", trace.label = "Interface")
+interaction.plot(search$interface,search$skill, search$time, xlab = "Interface", ylab = "Time", trace.label = "Skill level")
 ```
 
-**c)** H0: Search time is the same for all interfaces. From the ANOVA results below it can be concluded that H0 is rejected which means the search time is not the same for all interfaces. Futhermore, we can estimate the time it takes for a user with skill level 3 to find a product using interface 2 by looking at the summary table and adding the coeffcients of these two categories to the incercept. Thus that would be 15.015+3.033+2.7=20.748.
+**c)** $H_0$ : search time is the same for all interfaces. From the ANOVA results below, it can be concluded that $H_0$ is rejected. This means that the search time is not the same for all interfaces. Furthermore, we can estimate the time it takes for a user with skill level 3 to find a product using interface 2 by looking at the summary table and adding the coefficients of these two categories to the intercept. In this case, that would be $15.015+3.033+2.7=20.748$.
 
 ```{r}
 search$skill = factor(search$skill)
 search$interface = factor(search$interface)
-
 aovsearch=lm(time~interface+skill, data=search)
 anova(aovsearch)
 summary(aovsearch)
 ```
 
-**d)** The QQ-plot of the residuals below looks normally distributed, which is good. The fitted residuals do not depict any outliers. 
+**d)** The QQ-plot of the residuals below looks normally distributed, which is good. The fitted residuals do not depict any outliers.
 
-```{r}
+```{r fig.width=8, fig.height=3}
 par(mfrow=c(1,2))
 qqnorm(residuals(aovsearch))
 plot(fitted(aovsearch),residuals(aovsearch))
 ```
 
-**e)** The result of the Friedman test is the same as the ANOVA: we reject the H0 mentioned before, thus there is a difference in sesarch times.
+**e)** The result of the Friedman test is the same as the ANOVA test: we reject the $H_0$ mentioned before, thus, there is a difference in search times.
 
 ```{r}
 friedman.test(search$time,search$interface,search$skill)
 ```
 
-**f)** The one-way ANOVA returns no significant difference in the search time between the interfaces. This result is not very usefull, because 1) we removed a lot of information from the model and 2) the model now assumes that the block is a random selection of all available blocks, which is not the case because the blocks were fixed/predetermined.
+**f)** The one-way ANOVA returns no significant difference in the search time between the interfaces. This result is not very useful, because (1) we removed a lot of information from the model and (2) the model now assumes that the block is a random selection of all available blocks, which is not the case because the blocks were fixed/predetermined.
 
 ```{r}
-
 aovsearch2=lm(time~interface, data=search)
 anova(aovsearch2)
-
 ```
 
 ## Exercise 3
-**a)** First we evaluate normality to determine which test to use. From the QQ-plots below we conclude that both treatment samples are normally distributed. 
 
-```{r}
+**a)** First, we evaluate normality to determine which test to use. From the QQ-plots below, we conclude that both treatment samples are normally distributed. There are three hypotheses: (1) $H_0$ (id) : there is no difference in milk production between cows, (2) $H_0$ (per) : there is no difference in milk production in different periods and (3) $H_0$ (treatment) : there is no difference in milk production with different treatment. From the ANOVA results below, we can conclude that within-cow variation (see variable "id") the milk production differs. Because the p-value for id is less than the significance level of 0.05, therefore, the first $H_0$ is rejected. Furthermore, from the summary, we can conclude that most of the cows (except id4) are different from the cow with id1. Afterwards, we could see p-value for per is less than 0.05, so we reject the second $H_0$ which means that whether a cow is going through the first period or second seems to make a difference. Furthermore, as the p-value of treatment is equal to 0.51654, we do not reject the third $H_0$. This means that treatment A does not significantly differ from treatment B. This could be seen from the second table (treatment B). The summary below indicates that there is no significant difference in milk production. However, it is important to note that this is not the appropriate way of testing the cross-over design.
+
+```{r fig.width=8, fig.height=3}
 cow = read.table("cow.txt", header = TRUE);
-
-#There are two factors influence the milk production
+#There are two factors that influence the milk production
 mm = subset(cow, treatment=="A")["milk"]
 sf = subset(cow, treatment=="B")["milk"]
 mm1 = as.numeric(unlist(mm))
 sf1 = as.numeric(unlist(sf))
-
 par(mfrow=c(1,2))
 qqnorm(mm1)
 qqnorm(sf1)
-```
-
-There are three hypothese:
-H0 (id): There is no difference in milk production within cows
-H0 (per): There is no difference in milk production with different period 
-H0 (treatment): There is no difference in milk production with different treatment
-
-From the ANOVA results below, we can conclude that within-cow variation(see variable "id") the milk production differs. Because the p-value for id is less than 0.05, therefore, the first H0 is rejected. Furthermore, from the summary we can conclude that most of the cows(except id4) are different from the cow with id1.  
-Then, we could see p-value for per is less than 0.05 so we reject the second H0 which means whether a cow is going through the first period or second seems to make a difference.
-Furthurmore, because the p-value of treatment is 0.51654, so we do not reject the third H0 which means the treatment A does not significant differ from treatment B. Also this could be seen from second table (treatmentB). 
-Also the summary below indicate that there is no significant difference in milk production. However, it is important to note that this is not the appropiate way of testing the cross-over design.
-
-
-```{r}
 cow$id = factor(cow$id); cow$per = factor(cow$per)
 cowanova = lm(milk~id+per+treatment,data = cow)
 anova(cowanova)
 summary(cowanova)
-``` 
+```
 
-**b)** modelling the cow effect as a random effect (use the function lmer)
+**b)** In this exercise, we model the cows effect as a random effect by using the function lmer.
+
 ```{r}
 library(lme4)
 cow$order=factor(cow$order)
@@ -178,25 +136,29 @@ cowlmer = lmer(milk~treatment+order+per+(1|id), data=cow, REML = FALSE)
 summary(cowlmer)
 ```
 
-Based on the p-value below, we do not reject H0 for treatment we mentioned before which means treatment is not important. The result is the same as that in a).
+Based on the p-value below, we do not reject $H_0$ for treatment. This means that treatment is not important. The result is the same as the result a).
+
 ```{r}
 cowlmerTreatment = lmer(milk~order+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerTreatment, cowlmer)
 ```
 
-Based on the p-value below, we do not reject H0: There is no difference in milk production with different order. Therefore, the order of treatment AB is not important. 
+Based on the p-value below, we do not reject $H_0$ : there is no difference in milk production if the order differs. Therefore, the order of treatment AB is not important.
+
 ```{r}
 cowlmerOrder = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerOrder, cowlmer)
 ```
 
-Based on the p-value below, we reject H0 for per we mentioned before which means whether a cow is going through the first treatment or second is important. 
+Based on the p-value below, we reject $H_0$ for per, which means whether a cow is going through the first treatment or second is important.
+
 ```{r}
 cowlmerPer = lmer(milk~treatment+order+(1|id), data=cow, REML = FALSE)
 anova(cowlmerPer, cowlmer)
 ```
 
-**a)** From this result below that p-value is 0.8281 and we do not reject H0 for treatment which means the treatment is not important. From previous analysis the same conclusion was reached. Given the design, it is inappropriate to use the paired t-test. Since the previous analysis shows factors such as per has significant effect on milk production, it might be unwise to ignore such factor.
+**c)** From the result below we conclude that the p-value is equal to 0.8281 and we do not reject $H_0$ for treatment. This means that the treatment is not important. From previous analysis, the same conclusion was reached. Given the design, it is inappropriate to use the paired t-test. Since the previous analysis shows that factors such as per have a significant effect on the milk production, it might be unwise to ignore such factors.
+
 ```{r}
 attach(cow)
 t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
@@ -204,32 +166,24 @@ t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
 
 ## Exercise 4
 
-**a)**
-```{r}
+**a)** We observe that the result is the same as the dataset "nauseatable.txt", so the dataframe we created is correct. 
+
+```{r results='hide'}
 nausea = read.table("nauseatable.txt", header = TRUE)
-nausea
-```
-
-```{r}
-#We create a datafeam contains 2 columns: nausea, medicine
-#Set patient suffered from nausea as 1, otherwise 0
+#We create a dataframe that contains 2 columns: nausea, medicine
+#We set patients who suffered from nausea as 1, otherwise 0
 nausea=c(rep(0,times=100), rep(1,times=52),rep(0, times=32), rep(1, times=35),rep(0, times=48), rep(1, times=37))
-
 medicine=c(rep("Chlorpromazine", times=152),rep("Pentobarbital(100mg)", times=67),rep("Pentobarbital(150mg)", times=85))
 newNausea = data.frame(nausea,medicine); newNausea
-```
-
-```{r}
 xtabs(~medicine+nausea, data = newNausea) 
 ```
-We could see that the result is the same as the dataset "nauseatable.txt", so the dataframe we created is correct. 
 
-**b)**
-```{r}
+**b)** We observe that the p-value is 0.041, this is less than 0.05. Therefore, $H_0$ should be rejected which means that the medicine does not work equally well against nausea. By performing the chi-squared test, we get the result 6.62. We could use this to calculate the p-value. By performing the permutation test, we obtain the result 71.82. This test uses different values to calculate the final p-value.
+
+```{r results='hide', fig.width=6, fig.height=3}
 #Permutation test
 label_medic = factor(newNausea$medicine)
 nausdata = data.frame(nausea=as.vector(newNausea$nausea), label_medic)
-
 attach(nausdata)
 mystat=function(x) sum(residuals(x)^2)
 B=1000
@@ -244,20 +198,14 @@ myt
 pl=sum(tstar<myt)/B
 pr=sum(tstar>myt)/B
 pl
-```
-We could see that p-value is 0.041, less than 0.05. Therefore, H0 should be rejected which means the medicine doesn't work equally well against nausea. 
-
-```{r}
 #chisquare test
 chisq.test(xtabs(~newNausea$medicine+newNausea$nausea))[[1]]
 ```
-By using chisquared test we could get the result which is 6.62 and we could use this to calculate the p-value. While in permutation test the result is 71.82, they use different values to calculate the final p-value.
 
-**c)**
+**c)** We could see from chi-squared test that the p-value is equal to 0.03643, this is smaller than 0.05, therefore, $H_0$ should be rejected. The p-values of both tests are close to each other. In conclusion, they use different methods but the results are the same.
 ```{r}
 chisq.test(xtabs(~newNausea$medicine+newNausea$nausea))
 ```
-We could see from chisquared test that p-value is 0.03643, smaller than 0.05, therefore, H0 should be rejected. And the p-value of both tests are close to each other. In conclusion, they use different methods but the results are the same. 
 
 ## Exercise 5
 In our regression analysis, the response variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
@@ -399,3 +347,6 @@ plot(x,y,main="Added variable plot for pop")
 qqnorm(residuals(expendlm))
 #shapiro.test(residuals(expendlm))
 ```
+
+## Appendix
+
