@@ -109,7 +109,9 @@ anova(aovsearch2)
 
 ## Exercise 3
 
-**a)** First, we evaluate normality to determine which test to use. From the QQ-plots below, we conclude that both treatment samples are normally distributed. There are three hypotheses: (1) $H_0$ (id) : there is no difference in milk production between cows, (2) $H_0$ (per) : there is no difference in milk production in different periods and (3) $H_0$ (treatment) : there is no difference in milk production with different treatment. From the ANOVA results below, we can conclude that within-cow variation (see variable "id") the milk production differs. Because the p-value for id is less than the significance level of 0.05, therefore, the first $H_0$ is rejected. Furthermore, from the summary, we can conclude that most of the cows (except id4) are different from the cow with id1. Afterwards, we could see p-value for per is less than 0.05, so we reject the second $H_0$ which means that whether a cow is going through the first period or second seems to make a difference. Furthermore, as the p-value of treatment is equal to 0.51654, we do not reject the third $H_0$. This means that treatment A does not significantly differ from treatment B. This could be seen from the second table (treatment B). The summary below indicates that there is no significant difference in milk production. However, it is important to note that this is not the appropriate way of testing the cross-over design.
+**a)** First, we evaluate normality of the dataset. From the QQ-plots below, we conclude that both treatment samples are normally distributed. There are three hypotheses: (1) $H_0$ (id) : there is no difference in milk production between cows, (2) $H_0$ (per) : there is no difference in milk production in different periods and (3) $H_0$ (treatment) : there is no difference in milk production with different treatment. 
+From the ANOVA results below, we can conclude that within-cow variation (see variable "id") the milk production differs. Because the p-value for id is less than the significance level of 0.05, therefore, the first $H_0$ is rejected. Furthermore, from the summary, we can conclude that most of the cows (except id4) are different from the cow with id1. Afterwards, we could see p-value for per is less than 0.05, so we reject the second $H_0$ which means that whether a cow is going through the first period or second seems to make a difference. Furthermore, as the p-value of treatment is equal to 0.51654, we do not reject the third $H_0$. This means that treatment A does not significantly differ from treatment B. This could be seen from the second table (treatment B). 
+In conclusion, the type of feedingstuffs doesn't influence the milk production. And the summary below indicates that there is no significant difference in milk production. 
 
 ```{r fig.width=8, fig.height=3}
 cow = read.table("cow.txt", header = TRUE);
@@ -136,28 +138,17 @@ cowlmer = lmer(milk~treatment+order+per+(1|id), data=cow, REML = FALSE)
 summary(cowlmer)
 ```
 
-Based on the p-value below, we do not reject $H_0$ for treatment. This means that treatment is not important. The result is the same as the result a).
-
+Based on the three p-values below, first we do not reject $H_0$ for treatment. This means that treatment is not important. Secondly, we do not reject $H_0$ for order. Therefore, the order of treatment AB is not important.Finally we reject $H_0$ for per, which means whether a cow is going through the first treatment or second is important. The results are the same as the result in a).
 ```{r}
 cowlmerTreatment = lmer(milk~order+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerTreatment, cowlmer)
-```
-
-Based on the p-value below, we do not reject $H_0$ : there is no difference in milk production if the order differs. Therefore, the order of treatment AB is not important.
-
-```{r}
 cowlmerOrder = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerOrder, cowlmer)
-```
-
-Based on the p-value below, we reject $H_0$ for per, which means whether a cow is going through the first treatment or second is important.
-
-```{r}
 cowlmerPer = lmer(milk~treatment+order+(1|id), data=cow, REML = FALSE)
 anova(cowlmerPer, cowlmer)
 ```
 
-**c)** From the result below we conclude that the p-value is equal to 0.8281 and we do not reject $H_0$ for treatment. This means that the treatment is not important. From previous analysis, the same conclusion was reached. Given the design, it is inappropriate to use the paired t-test. Since the previous analysis shows that factors such as per have a significant effect on the milk production, it might be unwise to ignore such factors.
+**c)** From the p-value below we do not reject $H_0$ for treatment. This means the treatment is not important. From previous analysis, the same conclusion was reached. Given the design, it is inappropriate to use the paired t-test. Since the previous analysis shows that factors such as per have a significant effect on the milk production, it might be unwise to ignore such factors.
 
 ```{r}
 attach(cow)
