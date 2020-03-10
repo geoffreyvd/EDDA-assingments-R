@@ -40,9 +40,7 @@ plot(data$expend, data$pop,xlab="expend",ylab="pop")
 round(cor(data[,2:7]),2)
 ```
 **b)**
-<!-- Fit a linear regression model to the data -->
-<!-- Use both the step-up and the step-down method to find the best model -->
-To fit a linear regression model to the data, first, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient ($R^{2}$). The results are shown in the table below. Looking at this table, we observe that employ has the largerst value of $R^{2}$ (0.954) and is thus selected. Next, we combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in $R^{2}$ = 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add. This results in the last possible option: a model of employ, bad and crime combined. This result in $R^{2}$ = 0.9568, the highest value so far. As there are no more variables to add, the method stops here. The resulting model is: expend = -2.857$e^{+02}$ + 4.979$e^{-02}$ * employ - 1.391$e^{+00}$ * bad + 3.810$e^{-02}$ * crime + error. We have to be carefull as it could be argued that the variables employ and bad are collinear. Therefore, the model that is constructed with the variables employ and crime (expend = -2.484$e^{+02}$ + 4.630$e^{-02}$ * employ + 2.962$e^{-02}$ * crime + error) might be a better model as it contains fewer variables and the value of $R^{2}$ is similar.
+<!-- Fit a linear regression model to the data --> <!-- Use both the step-up and the step-down method to find the best model --> To fit a linear regression model to the data, first, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient ($R^{2}$). The results are shown in the table below. Looking at this table, we observe that employ has the largerst value of $R^{2}$ (0.954) and is thus selected. Next, we combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in $R^{2}$ = 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add. This results in the last possible option: a model of employ, bad and crime combined. This result in $R^{2}$ = 0.9568, the highest value so far. As there are no more variables to add, the method stops here. The resulting model is: expend = -2.857$e^{+02}$ + 4.979$e^{-02}$ * employ - 1.391$e^{+00}$ * bad + 3.810$e^{-02}$ * crime + error. We have to be carefull as it could be argued that the variables employ and bad are collinear. Therefore, the model that is constructed with the variables employ and crime (expend = -2.484$e^{+02}$ + 4.630$e^{-02}$ * employ + 2.962$e^{-02}$ * crime + error) might be a better model as it contains fewer variables and the value of $R^{2}$ is similar.
 
 | **Explantory Variable(s)** | bad    | crime  | lawyers | employ | pop    | bad, employ | crime, employ | bad, crime, employ |
 |---------------------|--------|--------|---------|--------|--------| -------------|--------------- | --------------- |
@@ -90,13 +88,10 @@ summary(lm(expend~bad+lawyers+employ+pop,data=data))
 summary(lm(expend~bad+lawyers+employ,data=data))
 summary(lm(expend~lawyers+employ, data=data))
 ```
-<!-- If step-up and step-down yield two different models, choose one and motivate your choice -->
-Using the step-up and step-down method resulted in two different models. The advantage of the model constructed using the step-up method (expend ~ employ bad crime) is that the variables are not collinear. The advantages of the model constructed using the step-down method (expend ~ lawyers employ) are that the value of $R^{2}$ (0.9632) is higher compared to the $R^{2}$ value of the step-up model (0.9568) and the model contains fewer explanatory variables. However, as the collinearity of variables weight higher compared to number of variables and the difference of $R^{2}$ is relatively small, we prefer the model constructed using the step-up model. We even consider removing the variable bad of the step-up model as it can be argued to have a collinear relation with the variable employ.
+<!-- If step-up and step-down yield two different models, choose one and motivate your choice --> Using the step-up and step-down method resulted in two different models. The advantage of the model constructed using the step-up method (expend ~ employ bad crime) is that the variables are not collinear. The advantages of the model constructed using the step-down method (expend ~ lawyers employ) are that the value of $R^{2}$ (0.9632) is higher compared to the $R^{2}$ value of the step-up model (0.9568) and the model contains fewer explanatory variables. However, as the collinearity of variables weight higher compared to number of variables and the difference of $R^{2}$ is relatively small, we prefer the model constructed using the step-up model. We even consider removing the variable bad of the step-up model as it can be argued to have a collinear relation with the variable employ.
 
 **c)**
-
-<!-- Check the model assumptions by using relevant diagnostic tools -->
-We check the model (expend ~ employ crime) assumptions (linearity of the relation and normality of the errors) using both graphical and numerical tools.
+<!-- Check the model assumptions by using relevant diagnostic tools --> We check the model (expend ~ employ crime) assumptions (linearity of the relation and normality of the errors) using both graphical and numerical tools. <!-- Investigate outliers, potential and influence points --> Coming back to question a), we investigate the outliers of the model. If we sort the residuals, we see that the 
 <!-- #1 Scatter plot: plot Y against each X k separately -->
 First, we look at the scatter plot of the response variable against each explanatory variable separately. This is visualized in a). For each combination with expend, we see two outliers at the right of the scatter plots. Moreover, the relation with the variables bad, lawyers, employ and pop is linear and nonlinear combined with state and crime. 
 <!-- #2 Scatter plot of residuals against each Xk in the model separately -->
@@ -112,7 +107,11 @@ Lastly, we check the normality assumption by constructing a qq-plot and conducti
 
 ```{r fig.width=8, fig.height=4, echo=FALSE}
 expendlm = lm(expend~crime+employ,data=data)
+expend=data$expend
+employ=data$employ
+crime=data$crime
 
+order(residuals(expendlm))
 
 par(mfrow=c(2,4))
 #2 Scatter plot of residuals against each Xk in the model separately.
