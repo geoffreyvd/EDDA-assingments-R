@@ -121,8 +121,7 @@ sf = subset(cow, treatment=="B")["milk"]
 mm1 = as.numeric(unlist(mm))
 sf1 = as.numeric(unlist(sf))
 par(mfrow=c(1,2))
-qqnorm(mm1)
-qqnorm(sf1)
+qqnorm(mm1); qqnorm(sf1)
 cow$id = factor(cow$id); cow$per = factor(cow$per)
 cowanova = lm(milk~id+per+treatment,data = cow)
 anova(cowanova)
@@ -333,6 +332,35 @@ qqnorm(residuals(expendlm))
 
 ## Appendix: R code
 ```{r echo=TRUE, eval=FALSE}
+# --- Exercise 3 --- #
+
+# A
+cow = read.table("cow.txt", header = TRUE);
+#There are two factors that influence the milk production
+mm = subset(cow, treatment=="A")["milk"]
+sf = subset(cow, treatment=="B")["milk"]
+mm1 = as.numeric(unlist(mm))
+sf1 = as.numeric(unlist(sf))
+par(mfrow=c(1,2))
+qqnorm(mm1); qqnorm(sf1)
+cow$id = factor(cow$id); cow$per = factor(cow$per)
+cowanova = lm(milk~id+per+treatment,data = cow)
+anova(cowanova); summary(cowanova)
+# B
+library(lme4)
+cow$order=factor(cow$order)
+cowlmer = lmer(milk~treatment+order+per+(1|id), data=cow, REML = FALSE)
+summary(cowlmer)
+
+cowlmerTreatment = lmer(milk~order+per+(1|id), data=cow, REML = FALSE)
+anova(cowlmerTreatment, cowlmer)
+cowlmerOrder = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
+anova(cowlmerOrder, cowlmer)
+cowlmerPer = lmer(milk~treatment+order+(1|id), data=cow, REML = FALSE)
+anova(cowlmerPer, cowlmer)
+# C
+attach(cow)
+t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
 
 # --- Exercise 4 --- #
 
@@ -359,3 +387,5 @@ pr=sum(tstar>test_statistic)/B;pr
 chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))
 
 ```
+
+
