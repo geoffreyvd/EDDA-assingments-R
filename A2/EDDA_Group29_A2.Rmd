@@ -1,8 +1,8 @@
 ---
 title: "**EDDA Group 29 Assignment 2**"
 author: "Geoffrey van Driessel (12965065), Yizhen Zhao (2658811) & Sophie Vos (2551583)"
-date: "3/9/2020"
 output: pdf_document
+geometry: margin=2cm
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=8, fig.height=4) 
 ```
 
-An overview of the R code is shown in the Appendix on page X.
+An overview of the R code is shown in the Appendix on page 13.
 
 ## Exercise 1
 
@@ -23,9 +23,9 @@ rbind(rep(1:I,each=N*J),rep(1:J,N*I),sample(1:(N*I*J)))
 
 **b)** The boxplot and interaction plot below confirms our intuition: (1) a cold environment causes a much slower decay, (2) wet bread has a much wider distribution (variance), (3) on average dry bread decays slower than wet bread, however, (4) wet and cold (frozen) bread has the slowest decay. From the non-parallel lines in the interaction plot and the wide distribution of the wet sample, we conclude that the (wet) humidity amplifies the effect of the temperature and it can thus be explained by the strong interaction between the two factors (opposed to the errors in the measurement).
 
-```{r fig.width=8, fig.height=3}
+```{r fig.width=5, fig.height=2.5}
 bread = read.table("bread.txt", header = TRUE)
-par(mfrow=c(1,3))
+par(mfrow=c(1,3),mai = c(0.5, 0.5, 0.5, 0.5))
 boxplot(hours ~ humidity, data = bread, ylab = "Hours")
 boxplot(hours ~ environment, data = bread, ylab = "Hours")
 interaction.plot(bread$environment, bread$humidity, bread$hours, xlab = "Temperature", ylab = "Hours", trace.label = "Humidity")
@@ -43,7 +43,7 @@ anova(breadaov)
 
 **e)** The first requirement is that for each unique category, there should be at least 2 samples, which is the case. Then, the most important requirement is that the data among the factors should approximately have equal variances. This has been tested in b) and the conclusion was that they approximately were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which can be expected from a random variable. In the QQ-plot, it can be seen that the residuals are approximately normally distributed. In the fitted residuals plot, it can be seen that the spread is approximately horizontally symmetric among the fitted values, however, there are 2 outliers in the middle. 
 
-```{r fig.width=8, fig.height=3}
+```{r fig.width=6, fig.height=2.5}
 par(mfrow=c(1,2))
 qqnorm(residuals(breadaov))
 plot(fitted(breadaov),residuals(breadaov))
@@ -63,9 +63,9 @@ for (i in 1:B) print(c(if1[i], if2[i], if3[i]))
 
 **b)** The boxplots below suggest that indeed the skill level and the interfaces matter for the search time. We see that skill level 1 and interface 1 are the fastest. From the interaction plots below, we observe clear interaction effects. Overall, the factors have the same pattern, namely, all lines start in the lower left corner and end towards the upper right corner. However, they are not perfectly parallel, this can be explained by the small sample sizes which cause local irregularities. Thus, we conclude that there is no interaction between the two factors.
 
-```{r fig.width=8, fig.height=6}
+```{r fig.width=8, fig.height=5}
 search = read.table("search.txt", header = TRUE)
-par(mfrow=c(2,2))
+par(mfrow=c(2,2),mai = c(0.5, 0.5, 0.5, 0.5))
 boxplot(time~skill, data=search)
 boxplot(time~interface, data=search)
 interaction.plot(search$skill,search$interface, search$time, xlab = "Skill level", ylab = "Time", trace.label = "Interface")
@@ -109,7 +109,7 @@ anova(aovsearch2)
 From the ANOVA results below, we can conclude that within-cow variation (see variable "id") the milk production differs. Because the p-value for id is less than the significance level of 0.05, therefore, the first $H_0$ is rejected. Furthermore, from the summary, we can conclude that most of the cows (except id4) are different from the cow with id1. Afterwards, we could see p-value for per is less than 0.05, so we reject the second $H_0$ which means that whether a cow is going through the first period or second seems to make a difference. Furthermore, as the p-value of treatment is equal to 0.51654, we do not reject the third $H_0$. This means that treatment A does not significantly differ from treatment B. This could be seen from the second table (treatment B). 
 In conclusion, the type of feedingstuffs doesn't influence the milk production. And the summary below indicates that there is no significant difference in milk production. 
 
-```{r fig.width=8, fig.height=3}
+```{r fig.width=6, fig.height=2.5}
 cow = read.table("cow.txt", header = TRUE);
 mm = subset(cow, treatment=="A")["milk"]
 sf = subset(cow, treatment=="B")["milk"]
@@ -132,7 +132,7 @@ cowlmer = lmer(milk~treatment+order+per+(1|id), data=cow, REML = FALSE)
 summary(cowlmer)
 ```
 
-Based on the three p-values below, first we do not reject $H_0$ for treatment. This means that treatment is not important. Secondly, we do not reject $H_0$ for order. Therefore, the order of treatment AB is not important.Finally we reject $H_0$ for per, which means whether a cow is going through the first treatment or second is important. The results are the same as the result in a).
+Based on the three p-values below, first we do not reject $H_0$ for treatment. This means that treatment is not important. Secondly, we do not reject $H_0$ for order. Therefore, the order of treatment AB is not important. Finally we reject $H_0$ for per, which means whether a cow is going through the first treatment or second is important. The results are the same as the result in a).
 ```{r}
 cowlmerTreatment = lmer(milk~order+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerTreatment, cowlmer)
@@ -165,7 +165,7 @@ xtabs(~medicine+nausea,data=patientdata)
 
 **b)** <!-- Perform a permutation test in order to test whether the different medicines work equally well against nausea. Permute the medicin labels for this purpose. Use as test statistic the chisquare test statistic for contingency tables, which can be extracted from the output of the command chisq.test: chisq.test(xtabs(∼medicin+nausea))[[1]] --> We perform a permutation test to test $H_0$ :  the medicines work equally well against nausea. To perform this test, we create 1000 random samples (permutations) of the medication data in which the order varies. We match these permutations of the medication data to the ordered nausea data and calculate the chi-square test statistic. The results of the test statistics of the permutations are shown in the histogram below. The result of the chi-square test statistic of the original data is 6.63. We observe that this value deviates from most values in the histogram. To confirm this, we calculated that the p-value is equal to 0.029. The p-value is smaller than the significance level of 0.05, therefore, $H_0$ is rejected and we can conclude that the different medicines do not work equally well against nausea.
 
-```{r fig.width=6, fig.height=3}
+```{r fig.width=3, fig.height=2.5,results='hide'}
 medication=factor(patientdata$medicine)
 B=1000
 tstar=numeric(B)
@@ -199,12 +199,13 @@ par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) hist(data[,i],xlab=names(data)[i],main=NULL)
 ```
 <!-- Boxplots -->
-```{r fig.width=8, fig.height=3, echo=FALSE}
+```{r fig.width=6, fig.height=2.5, echo=FALSE}
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) boxplot(data[,i],main=names(data)[i])
 ```
+
 <!-- Zoomed scatterplots + abline -->
-```{r fig.width=8, fig.height=3, echo=FALSE}
+```{r fig.width=6, fig.height=2.5, echo=FALSE}
 par(mfrow=c(1,5))
 plot(data$bad, data$expend,xlab="bad",ylab="expend");abline(lm(expend ~ bad, data=data))
 plot(data$crime, data$expend,xlab="crime",ylab="expend");abline(lm(expend ~ crime, data=data))
@@ -212,6 +213,7 @@ plot(data$lawyers, data$expend,xlab="lawyers",ylab="expend");abline(lm(expend ~ 
 plot(data$employ, data$expend,xlab="employ",ylab="expend");abline(lm(expend ~ employ, data=data))
 plot(data$pop, data$expend,xlab="pop",ylab="expend");abline(lm(expend ~ pop, data=data))
 ```
+
 <!-- Investigate the problem of potential and influence points--> A potential point is an outlier in an explanatory variable. The effect can be studied by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. As we have not constructed a model yet, we analyse the potential and influence points of our chosen model in c). <!-- Investigate the problem of collinearity--> Another relevent concept is collinearity. This is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot or by calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables bad, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at the output below, we observe that all the combinations of the variables lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a collinear relation. The variable bad has a weaker collinear relation with the variables lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
 ```{r echo=FALSE}
 round(cor(data[,3:7]),2) # exclude state and expend
@@ -219,23 +221,20 @@ round(cor(data[,3:7]),2) # exclude state and expend
 **b)**
 <!-- Fit a linear regression model to the data --> <!-- Use both the step-up and the step-down method to find the best model --> To fit a linear regression model to the data, first, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient ($R^{2}$). The results are shown in the table below (Round 1). Looking at this table, we observe that employ has the largerst value of $R^{2}$ (0.954) and is thus selected. Therefore, we add the remaining variables to contruct a model with the variable employ. The results are shown in the table below (Round 2). We observe that the model that is constructed using the variables employ and lawyers has the highest value of $R^{2}$ (0.9632). This value is also higher than the $R^{2}$ value of the previous model (0.954) and is significant (the p-values are smaller than the significance level of 0.05). For this reason, we extend the model with the remaining variables. The results are shown in the table below (Round 3). The table constructed using the variables employ, lawyers and bad has the highest value of $R^{2}$ (0.9639). However, the result in insignificant (p-value is equal to 0.34496), therefore, the method stops. The resulting model (expend ~ lawyers + employ) is expend = -1.107e$e^{+02}$ + 2.686$e^{-02}$ * lawyers + 2.971$e^{-02}$ * employ + error.
 
-**Round 1:**
+| **Round 1**              |                      |                        |                      |             |        |
+|----------------------|----------------------|------------------------|----------------------|-------------|--------|
+| Explantory Variable | bad                  | crime                  | laywers              | employ      | pop    |
+| Multiple R-squared   | 0.6964               | 0.1119                 | 0.9373               | 0.954       | 0.9073 |
 
-| **Explantory Variable(s)** | bad    | crime  | lawyers | employ | pop    |
-|----------------------------|--------|--------|---------|--------|--------| 
-| **Multiple R-squared**     | 0.6964 | 0.1119 | 0.9373  | 0.954  | 0.9073 |
+| **Round 2**              |                      |                        |                      |             |
+|----------------------|----------------------|------------------------|----------------------|-------------|
+| Explantory Variables | employ + bad          | employ + crime          | employ + lawyers      | employ + pop |
+| Multiple R-squared   | 0.9551               | 0.9551                 | 0.9632               | 0.9543      |
 
-**Round 2:**
-
-| **Explantory Variable(s)** | employ, bad | employ, crime | employ, lawyers | employ, pop |
-| ---------------------------|-------------| --------------| --------------- |-------------|
-| **Multiple R-squared**     |0.9551       | 0.9551        | 0.9632          | 0.9543      |
-
-**Round 3:**
-
-| **Explantory Variable(s)** | employ, lawyers, bad | employ, lawyers, crime | employ, lawyers, pop |
-| ---------------------------|--------------------- | ---------------------- |----------------------|
-| **Multiple R-squared**     |0.9639                | 0.9632                 | 0.9637               |
+| **Round 3**              |                      |                        |                      |
+|----------------------|----------------------|------------------------|----------------------|
+| Explantory Variables  | employ + lawyers + bad | employ + lawyers + crime | employ + lawyers + pop |
+| Multiple R-squared   | 0.9639               | 0.9632                 | 0.9637               |
 
 ```{r echo=FALSE,results='hide'}
 # Round 1
@@ -256,29 +255,26 @@ summary(lm(expend~employ+lawyers+pop,data=data))
 ```
 Second, we use the step-down method. This method starts with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed. In Round 1, we observe that the variable crime has the highest p-value, 0.25534 > 0.05, therefore, the variable crime will be removed. In Round 2, pop has the highest p-value, 0.06012 > 0.05, therefore, the variable pop will be removed. In Round 3, bad has the highest p-value, 0.34496 > 0.05, therefore, the variable bad will be removed. In Round 4, lawyers has the highest p-value, 0.00113 < 0.05, therefore, the variable will not be removed and the method stops. This results in the model expend = -1.107$e^{+02}$ + 2.686$e^{-02}$ * lawyers + 2.971$e^{-02}$ * employ + error. <!-- If step-up and step-down yield two different models, choose one and motivate your choice --> The step-up and step-down model resulted in the same model. Note that the explanatory variables in this model are linearly correlated, this is bad practise for a regression model. If the step-up and step-down resulted in different models, the one with the higest value of $R^{2}$, the lowest number of explanatory variables and no collinear variables would be prefered. 
 
-**Round 1: expend ~ bad, crime, lawyers, employ, pop**
 
-| **Explantory Variables** | bad | crime | lawyers | employ | pop   | 
+|**Round 1**|expend ~ bad + | crime + | lawyers + | employ + | pop   | 
 |--------------------------|-----|-------|---------|--------| ----  |
-| **p-value**              |0.02719|0.25534|0.00592|0.00354 |0.03184|
+| Explantory Variable | bad | crime | lawyers | employ | pop   | 
+| p-value              |0.02719|0.25534|0.00592|0.00354 |0.03184|
 
-**Round 2: expend ~ bad, lawyers, employ, pop**
-
-| **Explantory Variables** | bad | lawyers | employ | pop | 
+|**Round 2**|expend ~ bad + | lawyers + | employ + | pop   | 
 |--------------------------|-----|---------|--------| ----|
-| **p-value**              |0.05402|0.00106|0.00380|0.06012|
+| Explantory Variable | bad | lawyers | employ | pop | 
+| p-value              |0.05402|0.00106|0.00380|0.06012|
 
-**Round 3: expend ~ bad, lawyers, employ**
-
-| **Explantory Variables** | bad | lawyers | employ |
+|**Round 3**|expend ~ bad + | lawyers + | employ |
 |--------------------------|-----|---------|--------|
-| **p-value**              |0.34496|0.00147|1.2$e^{-06}$|
+| Explantory Variable | bad | lawyers | employ |
+| p-value            |0.34496|0.00147|1.2$e^{-06}$|
 
-**Round 4: expend ~ lawyers, employ**
-
-| **Explantory Variables** | lawyers | employ |
-|--------------------------|---------|--------|
-| **p-value**              |0.00113|4.89$e^{-07}$|
+|**Round 4**|expend ~ lawyers + | employ |
+|--------------------------|-----|---------|--------|
+| Explantory Variables | lawyers | employ |
+| p-value           |0.00113|4.89$e^{-07}$|
 
 ```{r echo=FALSE,results='hide'}
 summary(lm(expend~bad+crime+lawyers+employ+pop,data=data))
@@ -290,7 +286,7 @@ summary(lm(expend~lawyers+employ, data=data))
 **c)**
 <!-- Investigate outliers, potential and influence points (from question a) --> Coming back to question a), we investigate the potential and influence points of the model (expend ~ lawyers + employ). When ordering the residuals of the model, we observe the presence of outliers. Thus, we test if these potential points are influence points using the Cook's distance. We calculate that the data on the 5th and 8th position have a Cook's distance larger than 1. This is also visible from the plot of the Cook's distances. Hence, we conclude that the data on position 5 and 8 are influence points. <!-- Check the model assumptions by using relevant diagnostic tools --> Now, we check the model assumptions (linearity of the relation and normality of the errors) using both graphical and numerical tools. <!-- #2 Scatter plot of residuals against each Xk in the model separately --> First, we construct the scatter plot of the residuals against each explanatory variable that is in the model (lawyers and employ) seperately. We observe a cluster around zero and relatively little spread, except for two outliers. <!-- #4 Scatter plot of residuals against each Xk not in the model separately --> Second, we construct the scatter plots of the residuals against each explanatory variable that is not in the model (bad, crime and pop) seperatly. The outputs of bad and pop have a similar pattern as the previous plots. This can be explained by the fact that these variables are all collinear (see a). Except for the variable crime, this plot shows more spread. When looking at the patterns, we do not observe a linear relation and therefore should not include more variables into the model. <!-- #5 Scatterplot of residuals against Y and Y^ --> Third, we construct the scatter plot of the reduals against the response variable (expend) and the fitted model. We observe little spread as in both plots there is a cluster around zero except the two reoccuring outliers.
 
-```{r fig.width=9, fig.height=5, echo=FALSE,results='hide'}
+```{r fig.width=8, fig.height=4, echo=FALSE,results='hide'}
 expendlm = lm(expend~lawyers+employ,data=data)
 round(residuals(expendlm),2)
 order(abs(residuals(expendlm)))
@@ -306,7 +302,7 @@ plot(residuals(expendlm),data[,2],xlab="residuals",ylab="expend")
 plot(residuals(expendlm),fitted(expendlm),xlab="residuals",ylab="fitted model")
 ```
 
-<!-- #3 Added variable plot of residuals of Xj against residuals of Y with omitted Xj --> Afterwards, we construct the added variable plots. In these plots, the residuals of the explanatory variables are plotted against the residuals of the model without that specific variable. This shows the effect of adding an explanatory variable to the model. Looking at the figure, we observe that the added variable plots for bad, lawyers, employ and pop are clustered around zero, again, with the exception of two outliers. The added variable plot for crime shows more spread. <!-- #6 normal QQ-plot --> Lastly, we check the normality assumption by constructing a normal QQ plot. We cannot assume normality as the QQ plot does not approximate a straight line, this means that the model is invalid. In conclusion, the model is flawed. First of all, the explanatory variables lawyers and employ are collinear, the scatter plots of the residuals show little spread and variance, and are clustered around zero. Furthermore, the residuals are not normally distributed. Therefore, in a next iteration the model should be adapted.
+<!-- #3 Added variable plot of residuals of Xj against residuals of Y with omitted Xj --> Afterwards, we construct the added variable plots. In these plots, the residuals of the explanatory variables are plotted against the residuals of the model without that specific variable. This shows the effect of adding an explanatory variable to the model. Looking at the figure, we observe that the added variable plots for bad, lawyers, employ and pop are clustered around zero, again, with the exception of two outliers. The added variable plot for crime shows more spread. <!-- #6 normal QQ-plot --> Lastly, we check the normality assumption by constructing a normal QQ-plot. We cannot assume normality as the QQ-plot does not approximate a straight line, this means that the model is invalid. In conclusion, the model is flawed. First of all, the explanatory variables lawyers and employ are collinear. Second, the scatter plots of the residuals show little spread and are clustered around zero. Lastly, the residuals are not normally distributed. Therefore, in a next iteration the model should be adjusted.
 
 ```{r fig.width=8, fig.height=4, echo=FALSE}
 par(mfrow=c(2,3))
@@ -366,8 +362,11 @@ interaction.plot(search$skill,search$interface, search$time, xlab = "Skill level
 interaction.plot(search$interface,search$skill, search$time, xlab = "Interface", 
   ylab = "Time", trace.label = "Skill level")
 #C
-breadaov=lm(hours~humidity*environment, data = bread); 
-anova(breadaov)
+search$skill = factor(search$skill)
+search$interface = factor(search$interface)
+aovsearch=lm(time~interface+skill, data=search)
+anova(aovsearch)
+summary(aovsearch)
 #D
 par(mfrow=c(1,2))
 qqnorm(residuals(aovsearch))
@@ -403,8 +402,7 @@ anova(cowlmerOrder, cowlmer)
 cowlmerPer = lmer(milk~treatment+order+(1|id), data=cow, REML = FALSE)
 anova(cowlmerPer, cowlmer)
 # C
-attach(cow)
-t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
+attach(cow);t.test(milk[treatment=="A"],milk[treatment=="B"],paired=TRUE)
 
 # --- Exercise 4 --- #
 # A
@@ -417,8 +415,7 @@ patientdata=data.frame(nausea,medicine)
 xtabs(~medicine+nausea,data=patientdata)
 #B
 medication=factor(patientdata$medicine)
-B=1000
-tstar=numeric(B)
+B=1000;tstar=numeric(B)
 for (i in 1:B) {
   patientstar=sample(medication) # permute medicine lables
   tstar[i] = chisq.test(xtabs(~patientstar+patientdata$nausea))[[1]] }
@@ -431,8 +428,7 @@ chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))
 
 # --- Exercise 5 --- #
 #A
-data=read.table(file="expensescrime.txt",header=TRUE)
-plot(data)
+data=read.table(file="expensescrime.txt",header=TRUE);plot(data)
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
 for (i in 2:ncol(data)) hist(data[,i],xlab=names(data)[i],main=NULL)
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
@@ -468,8 +464,7 @@ summary(lm(expend~bad+lawyers+employ,data=data))
 summary(lm(expend~lawyers+employ, data=data))
 #C
 expendlm = lm(expend~lawyers+employ,data=data)
-round(residuals(expendlm),2)
-order(abs(residuals(expendlm)))
+round(residuals(expendlm),2);order(abs(residuals(expendlm)))
 round(cooks.distance(expendlm),2)
 par(mfrow=c(2,4))
 plot(1:51,cooks.distance(expendlm),type="b")
