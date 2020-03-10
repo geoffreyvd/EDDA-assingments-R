@@ -10,8 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 In our regression analysis, the response variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
 
 **a)**
-<!-- Make some graphical summaries of the data -->
-First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. Looking at the plots, we observe that expend, lawyers, employ and pop all approximate a linear relationship with each other. Furthermore, state and crime have nonlinear relationhsips with all the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Looking at the histograms, it is interesting to see that almost all variables (expend, bad, lawyers, employ and pop) follow a similar pattern, namely, the lowest value appears frequently and as the value increases, the frequency decreases steeply. Except for a few outliers of frequently occuring high values. In contrast, the variable crime shows a different pattern. Namely, the values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
+<!-- Make some graphical summaries of the data --> First, we make a graphical summary of the data by plotting each variable against the others in scatterplots. Looking at the plots, we observe that expend, lawyers, employ and pop all approximate a linear relationship with each other. Furthermore, state and crime have nonlinear relationhsips with all the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Thereafter, we constructed histograms of the numerical data. Looking at the histograms, it is interesting to see that almost all variables (expend, bad, lawyers, employ and pop) follow a similar pattern, namely, the lowest value appears frequently and as the value increases, the frequency decreases steeply. Except for a few outliers of frequently occuring high values. In contrast, the variable crime shows a different pattern. Namely, the values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well. Lastly, we constructed boxplots of the data. Again, we observe a similar pattern of all variables except the variable crime. Crime is more evenly distributed and contains fewer outliers. The other variables are skewed towards the lower values combined with outlying higher values. To explore these outliers further and in oder to build an intuition of the linear relationship between the depandable variable (expand) and the explanatory variables, we zoomed in on the relevant scatter plots that were presented above. From these plots, we observe a strong linear relationship between the dependend variable expend and variables: bad, lawyers, employ and pop. However, the outliers disturb this pattern. In general, outliers can have two causes: corrupted data or the population includes extremes. If the data is corrupted, the outliers should be removed before fitting the model. If the population is expected to contain extremes as well, the outliers should be kept when fitting the model. We assume that the data is not corrupted and outliers can be expected in the population as well, therefore, we will not remove the outliers.
 <!-- Scatter plots -->
 ```{r fig.width=8, fig.height=4, echo=FALSE}
 data=read.table(file="expensescrime.txt",header=TRUE)
@@ -20,29 +19,29 @@ plot(data)
 <!-- Histograms -->
 ```{r fig.width=8, fig.height=2, echo=FALSE}
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
-for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
+for (i in 2:ncol(data)) hist(data[,i],xlab=names(data)[i],main=NULL)
 ```
-
-To build an intuition of the linear relationship between the depandable variable (expand) and its explanatory variable, we have plotted the explanatory variables against the dependaple variable below. These are the same plots as from the first plot with all factors plotted against each other, but now we can take a closer look. From the plots we can see a strong linear relationship between the dependable expend and 4 of the five factors: bad, lawyers, employ and pop. However we see very big outliers, which will have to be adjusted for, otherwise they will have a very big weight in the factor coefficient from the linear regression.
-```{r fig.width=8, fig.height=4, echo=FALSE}
-
-par(mfrow=c(1,3))
-plot(data$expend, data$bad)
-plot(data$expend, data$crime)
-plot(data$expend, data$lawyers)
-plot(data$expend, data$employ)
-plot(data$expend, data$pop)
+<!-- Boxplots -->
+```{r fig.width=8, fig.height=3, echo=FALSE}
+par(mfrow=c(1,ncol(data)-1)) # minus the state column
+for (i in 2:ncol(data)) boxplot(data[,i],main=names(data)[i])
 ```
-<!-- Investigate the problem of potential and influence points-->
-A potential point is an outlier in an explanatory variable. The effect can be studied by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. As we have not constructed a model yet, we analyse the potential and influence points of our chosen model in c).
-<!-- Investigate the problem of collinearity-->
-Another relevent concept is collinearity. This is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot or by calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables expend, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at the output below, we observe that all the combinations of the variables expend, lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a collinear relation. The variable bad has a weaker collinear relation with the variables expend, lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
+<!-- Zoomed scatterplots -->
+```{r fig.width=8, fig.height=3, echo=FALSE}
+par(mfrow=c(1,5))
+plot(data$expend, data$bad,xlab="expend",ylab="bad")
+plot(data$expend, data$crime,xlab="expend",ylab="crime")
+plot(data$expend, data$lawyers,xlab="expend",ylab="lawyers")
+plot(data$expend, data$employ,xlab="expend",ylab="employ")
+plot(data$expend, data$pop,xlab="expend",ylab="pop")
+```
+<!-- Investigate the problem of potential and influence points--> A potential point is an outlier in an explanatory variable. The effect can be studied by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. As we have not constructed a model yet, we analyse the potential and influence points of our chosen model in c). <!-- Investigate the problem of collinearity--> Another relevent concept is collinearity. This is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot or by calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables expend, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at the output below, we observe that all the combinations of the variables expend, lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a collinear relation. The variable bad has a weaker collinear relation with the variables expend, lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
 ```{r echo=FALSE}
 round(cor(data[,2:7]),2)
 ```
 **b)**
 <!-- Fit a linear regression model to the data -->
-  <!-- Use both the step-up and the step-down method to find the best model -->
+<!-- Use both the step-up and the step-down method to find the best model -->
 To fit a linear regression model to the data, first, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient ($R^{2}$). The results are shown in the table below. Looking at this table, we observe that employ has the largerst value of $R^{2}$ (0.954) and is thus selected. Next, we combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in $R^{2}$ = 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add. This results in the last possible option: a model of employ, bad and crime combined. This result in $R^{2}$ = 0.9568, the highest value so far. As there are no more variables to add, the method stops here. The resulting model is: expend = -2.857$e^{+02}$ + 4.979$e^{-02}$ * employ - 1.391$e^{+00}$ * bad + 3.810$e^{-02}$ * crime + error. We have to be carefull as it could be argued that the variables employ and bad are collinear. Therefore, the model that is constructed with the variables employ and crime (expend = -2.484$e^{+02}$ + 4.630$e^{-02}$ * employ + 2.962$e^{-02}$ * crime + error) might be a better model as it contains fewer variables and the value of $R^{2}$ is similar.
 
 | **Explantory Variable(s)** | bad    | crime  | lawyers | employ | pop    | bad, employ | crime, employ | bad, crime, employ |
@@ -95,6 +94,7 @@ summary(lm(expend~lawyers+employ, data=data))
 Using the step-up and step-down method resulted in two different models. The advantage of the model constructed using the step-up method (expend ~ employ bad crime) is that the variables are not collinear. The advantages of the model constructed using the step-down method (expend ~ lawyers employ) are that the value of $R^{2}$ (0.9632) is higher compared to the $R^{2}$ value of the step-up model (0.9568) and the model contains fewer explanatory variables. However, as the collinearity of variables weight higher compared to number of variables and the difference of $R^{2}$ is relatively small, we prefer the model constructed using the step-up model. We even consider removing the variable bad of the step-up model as it can be argued to have a collinear relation with the variable employ.
 
 **c)**
+
 <!-- Check the model assumptions by using relevant diagnostic tools -->
 We check the model (expend ~ employ crime) assumptions (linearity of the relation and normality of the errors) using both graphical and numerical tools.
 <!-- #1 Scatter plot: plot Y against each X k separately -->
@@ -108,10 +108,12 @@ Next, we construct the scatter plots of the residuals against each explanatory v
 <!-- #5 Scatterplot of residuals against Y and Y^ -->
 Afterwards, we construct the scatter plot of the reduals against the response variable and the fitted model. We observe little spread as in both plots there is a cluster around zero with only few outliers. This means...
 <!-- #6 normal QQ-plot of the residuals and Shapiro-Wilk's method -->
-Lastly, we check the normality assumption by constructing a qq-plot and conduction Shapiro-Wilk's test. We cannot assume normality as the qq-plot does not approximate a straight line, this means that the model is invalid. Unfortunetely, none of the other models resulted in a normal distribution of the residuals. 
+Lastly, we check the normality assumption by constructing a qq-plot and conduction Shapiro-Wilk's test. We cannot assume normality as the qq-plot does not approximate a straight line, this means that the model is invalid. Unfortunetely, none of the other models resulted in a normal distribution of the residuals. When looking at the scatterplots
 
 ```{r fig.width=8, fig.height=4, echo=FALSE}
 expendlm = lm(expend~crime+employ,data=data)
+
+
 par(mfrow=c(2,4))
 #2 Scatter plot of residuals against each Xk in the model separately.
 plot(residuals(expendlm),data[,4],xlab="residuals",ylab="crime")
