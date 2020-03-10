@@ -179,8 +179,8 @@ for (i in 1:B) {
   tstar[i] = chisq.test(xtabs(~patientstar+patientdata$nausea))[[1]] }
 hist(tstar)
 test_statistic=chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))[[1]]
-pl=sum(tstar<test_statistic)/B
-pr=sum(tstar>test_statistic)/B
+pl=sum(tstar<test_statistic)/B;pl
+pr=sum(tstar>test_statistic)/B;pr
 ```
 
 **c)** <!-- Compare the p-value found by the permutation test with the p-value found from the chisquare test for contingency tables. Explain the difference/equality of the two p-values. --> When performing the chi-squared test, we observe that the p-value is equal to 0.03643. This is smaller than the significance level of 0.05, therefore, $H_0$ (the medicines work equally well against nausea) is rejected. This is a similar outcome to the permutation test, however, the p-values do differ. The values lie close to each other as both tests are valid in this situation and compare the proportion of expected outcomes (when assuming no dependence) to the actual outcome. The difference can be explained by the different way of calculating the p-value. Using the permutation test, the p-value is calculated by calculating the number of times that the test statistics of the permuted data is smaller than the test statistic of the original data. Using the chi-squared test, the p-value is calculated by comparing the proportion of rows and columns of independend data to the proportion of rows and columns of the actual data.
@@ -193,8 +193,7 @@ chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))
 In our regression analysis, the response variable is "expend" and the explanatory variables are: "bad, crime, lawyers, employ and pop". The purpose is to explain expend by a numerical function of the explanatory variables.
 
 **a)**
-<!-- Make some graphical summaries of the data -->
-First, we make a graphical summary of the data by plotting each variable against the others. Furthermore, we construct a histogram of all the numerical variables. Looking at the plots, we observe that expend, lawyers, employ and pop all approximate a linear relationship with each other. Furthermore, state and crime have nonlinear relationhsips with all the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Looking at the histograms, it is interesting to see that almost all variables (expend, bad, lawyers, employ and pop) follow a similar pattern, namely, the lowest value appears frequently and as the value increases, the frequency decreases steeply. Except for a few outliers of frequently occuring high values. In contrast, the variable crime shows a different pattern. Namely, the values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well.
+<!-- Make some graphical summaries of the data --> First, we make a graphical summary of the data by plotting each variable against the others in scatterplots. Looking at the plots, we observe that expend, lawyers, employ and pop all approximate a linear relationship with each other. Furthermore, state and crime have nonlinear relationhsips with all the other variables. Lastly, the variable bad can be argued to have a weak linear relationship with the variables expend, lawyers, employ and pop. Thereafter, we constructed histograms of the numerical data. Looking at the histograms, it is interesting to see that almost all variables (expend, bad, lawyers, employ and pop) follow a similar pattern, namely, the lowest value appears frequently and as the value increases, the frequency decreases steeply. Except for a few outliers of frequently occuring high values. In contrast, the variable crime shows a different pattern. Namely, the values in the middle occur also relatively frequently. But the rule: as the value increases, the frequency decreases, applies as well. Afterwards, we constructed boxplots of the data. Again, we observe a similar pattern of all variables except the variable crime. Crime is more evenly distributed and contains fewer outliers. The other variables are skewed towards the lower values combined with outlying higher values. To explore these outliers further and in order to build an intuition of the linear relationship between the response variable (expand) and the explanatory variables, we zoomed in on the relevant scatter plots that were presented above. From these plots, we observe a strong linear relationship between the response variable expend and the variables: bad, lawyers, employ and pop. When plotting the simple regression models in these scatterplots, we observe that the outliers follow the linear pattern.
 <!-- Scatter plots -->
 ```{r fig.width=8, fig.height=4, echo=FALSE}
 data=read.table(file="expensescrime.txt",header=TRUE)
@@ -203,52 +202,73 @@ plot(data)
 <!-- Histograms -->
 ```{r fig.width=8, fig.height=2, echo=FALSE}
 par(mfrow=c(1,ncol(data)-1)) # minus the state column
-for (i in 2:ncol(data)) hist(data[,i],main=names(data)[i])
+for (i in 2:ncol(data)) hist(data[,i],xlab=names(data)[i],main=NULL)
 ```
-
-To build an intuition of the linear relationship between the depandable variable (expand) and its explanatory variable, we have plotted the explanatory variables against the dependaple variable below. These are the same plots as from the first plot with all factors plotted against each other, but now we can take a closer look. From the plots we can see a strong linear relationship between the dependable expend and 4 of the five factors: bad, lawyers, employ and pop. However we see very big outliers, which will have to be adjusted for, otherwise they will have a very big weight in the factor coefficient from the linear regression.
-```{r fig.width=8, fig.height=4, echo=FALSE}
-
-par(mfrow=c(1,3))
-plot(data$expend, data$bad)
-plot(data$expend, data$crime)
-plot(data$expend, data$lawyers)
-plot(data$expend, data$employ)
-plot(data$expend, data$pop)
+<!-- Boxplots -->
+```{r fig.width=8, fig.height=3, echo=FALSE}
+par(mfrow=c(1,ncol(data)-1)) # minus the state column
+for (i in 2:ncol(data)) boxplot(data[,i],main=names(data)[i])
 ```
-<!-- Investigate the problem of potential and influence points-->
-A potential point is an outlier in an explanatory variable. The effect can be studied by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. As we have not constructed a model yet, we analyse the potential and influence points of our chosen model in c).
-<!-- Investigate the problem of collinearity-->
-Another relevent concept is collinearity. This is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot or by calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables expend, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at the output below, we observe that all the combinations of the variables expend, lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a collinear relation. The variable bad has a weaker collinear relation with the variables expend, lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
+<!-- Zoomed scatterplots + abline -->
+```{r fig.width=8, fig.height=3, echo=FALSE}
+par(mfrow=c(1,5))
+plot(data$bad, data$expend,xlab="bad",ylab="expend");abline(lm(expend ~ bad, data=data))
+plot(data$crime, data$expend,xlab="crime",ylab="expend");abline(lm(expend ~ crime, data=data))
+plot(data$lawyers, data$expend,xlab="lawyers",ylab="expend");abline(lm(expend ~ lawyers, data=data))
+plot(data$employ, data$expend,xlab="employ",ylab="expend");abline(lm(expend ~ employ, data=data))
+plot(data$pop, data$expend,xlab="pop",ylab="expend");abline(lm(expend ~ pop, data=data))
+```
+<!-- Investigate the problem of potential and influence points--> A potential point is an outlier in an explanatory variable. The effect can be studied by fitting the model with and without the potential point. If the estimated parameters change drastically when removing the potenetial point, the observation is called an influence point. Using the Cook's formula, the distance of an observation on the predictions can be calculated. Whenever the Cook's distance for an observation approximates or is larger than 1, the observation can be considered to be an influence point. As we have not constructed a model yet, we analyse the potential and influence points of our chosen model in c). <!-- Investigate the problem of collinearity--> Another relevent concept is collinearity. This is the problem of linear relations between explanatory variables. Collinearity can be detected by a straight line in a scatter plot or by calculating the correlation coefficient. Looking at the scatter plots of the data, we suspect collinearity between the variables bad, lawyers, employ and pop. We confirm this by calculating the correlaction coeffiecients of all possible variable combinations. Looking at the output below, we observe that all the combinations of the variables lawyers, employ and pop have a correlation coefficient above 93. Thus, we conclude that these variables have a collinear relation. The variable bad has a weaker collinear relation with the variables lawyers, employ and pop, namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no collinear relation with any of the other variables. When collinearity is detected among variables, we should avoid having both explanatory variables in the model.
 ```{r echo=FALSE}
-round(cor(data[,2:7]),2)
+round(cor(data[,3:7]),2) # exclude state and expend
 ```
 **b)**
-<!-- Fit a linear regression model to the data -->
-<!-- Use both the step-up and the step-down method to find the best model -->
-To fit a linear regression model to the data, first, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient ($R^{2}$). The results are shown in the table below. Looking at this table, we observe that employ has the largerst value of $R^{2}$ (0.954) and is thus selected. Next, we combine this variable with all the variables that do not have a collinear relation with employ. These are the explanatory variables bad and crime. Note that the variable bad still can be considered to be linearly correlated to employ. Adding the variables bad and crime to the models yields in $R^{2}$ = 0.9551. This is an improvement compared to the previous model. Therefore, we continue to add the other vairables to the model. For both models, there is just one variable to add. This results in the last possible option: a model of employ, bad and crime combined. This result in $R^{2}$ = 0.9568, the highest value so far. As there are no more variables to add, the method stops here. The resulting model is: expend = -2.857$e^{+02}$ + 4.979$e^{-02}$ * employ - 1.391$e^{+00}$ * bad + 3.810$e^{-02}$ * crime + error. We have to be carefull as it could be argued that the variables employ and bad are collinear. Therefore, the model that is constructed with the variables employ and crime (expend = -2.484$e^{+02}$ + 4.630$e^{-02}$ * employ + 2.962$e^{-02}$ * crime + error) might be a better model as it contains fewer variables and the value of $R^{2}$ is similar.
+<!-- Fit a linear regression model to the data --> <!-- Use both the step-up and the step-down method to find the best model --> To fit a linear regression model to the data, first, we start with the step-up method. Using this method, we start by fitting all possible simple linear regression models and calculate the determination coefficient ($R^{2}$). The results are shown in the table below (Round 1). Looking at this table, we observe that employ has the largerst value of $R^{2}$ (0.954) and is thus selected. Therefore, we add the remaining variables to contruct a model with the variable employ. The results are shown in the table below (Round 2). We observe that the model that is constructed using the variables employ and lawyers has the highest value of $R^{2}$ (0.9632). This value is also higher than the $R^{2}$ value of the previous model (0.954) and is significant (the p-values are smaller than the significance level of 0.05). For this reason, we extend the model with the remaining variables. The results are shown in the table below (Round 3). The table constructed using the variables employ, lawyers and bad has the highest value of $R^{2}$ (0.9639). However, the result in insignificant (p-value is equal to 0.34496), therefore, the method stops. The resulting model (expend ~ lawyers + employ) is expend = -1.107e$e^{+02}$ + 2.686$e^{-02}$ * lawyers + 2.971$e^{-02}$ * employ + error.
 
-| **Explantory Variable(s)** | bad    | crime  | lawyers | employ | pop    | bad, employ | crime, employ | bad, crime, employ |
-|---------------------|--------|--------|---------|--------|--------| -------------|--------------- | --------------- |
-| **Multiple R-squared**  | 0.6964 | 0.1119 | 0.9373  | 0.954  | 0.9073 | 0.9551       | 0.9551         | 0.9568  |
+**Round 1:**
+
+| **Explantory Variable(s)** | bad    | crime  | lawyers | employ | pop    |
+|----------------------------|--------|--------|---------|--------|--------| 
+| **Multiple R-squared**     | 0.6964 | 0.1119 | 0.9373  | 0.954  | 0.9073 |
+|----------------------------|--------|--------|---------|--------|--------| 
+
+**Round 2:**
+
+| **Explantory Variable(s)** | employ, bad | employ, crime | employ, lawyers | employ, pop |
+| ---------------------------|-------------| --------------| --------------- |-------------|
+| **Multiple R-squared**     |0.9551       | 0.9551        | 0.9632          | 0.9543      |
+| ---------------------------|-------------| --------------| --------------- |-------------|
+
+**Round 3:**
+
+| **Explantory Variable(s)** | employ, lawyers, bad | employ, lawyers, crime | employ, lawyers, pop |
+| ---------------------------|--------------------- | ---------------------- |----------------------|
+| **Multiple R-squared**     |0.9639                | 0.9632                 | 0.9637               |
 
 ```{r echo=FALSE,results='hide'}
+# Round 1
 summary(lm(expend~bad,data=data))
 summary(lm(expend~crime,data=data))
 summary(lm(expend~lawyers,data=data))
 summary(lm(expend~employ,data=data))
 summary(lm(expend~pop,data=data))
-summary(lm(expend~bad+employ,data=data))
-summary(lm(expend~crime+employ,data=data))
-summary(lm(expend~bad+crime+employ,data=data))
+# Round 2
+summary(lm(expend~employ+bad,data=data))
+summary(lm(expend~employ+crime,data=data))
+summary(lm(expend~employ+lawyers,data=data))
+summary(lm(expend~employ+pop,data=data))
+# Round 3
+summary(lm(expend~employ+lawyers+bad,data=data))
+summary(lm(expend~employ+lawyers+crime,data=data))
+summary(lm(expend~employ+lawyers+pop,data=data))
 ```
-Second, we use the step-down method. This method start with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed. This time, we try the model with all variables, regardless of collinearity. In round 1, we observe that the variable crime has the highest p-value, 0.25534 > 0.05, therefore, the variable crime will be removed. In round 2, pop has the highest p-value, 0.06012 > 0.05, therefore, the variable pop will be removed. In round 3, bad has the highest p-value, 0.34496 > 0.05, therefore, the variable bad will be removed. In round 4, lawyers has the highest p-value, 0.00113 < 0.05, therefore, the variable will not be removed and the method stops. This results in the model expend = -1.107$e^{+02}$ + 2.686$e^{-02}$ * lawyers + 2.971$e^{-02}$ * employ + error.
+Second, we use the step-down method. This method starts with fitting all explanatory variables in the so-called full model. In each iteration, one explanatory variable is removed. In Round 1, we observe that the variable crime has the highest p-value, 0.25534 > 0.05, therefore, the variable crime will be removed. In Round 2, pop has the highest p-value, 0.06012 > 0.05, therefore, the variable pop will be removed. In Round 3, bad has the highest p-value, 0.34496 > 0.05, therefore, the variable bad will be removed. In Round 4, lawyers has the highest p-value, 0.00113 < 0.05, therefore, the variable will not be removed and the method stops. This results in the model expend = -1.107$e^{+02}$ + 2.686$e^{-02}$ * lawyers + 2.971$e^{-02}$ * employ + error. <!-- If step-up and step-down yield two different models, choose one and motivate your choice --> The step-up and step-down model resulted in the same model. Note that the explanatory variables in this model are linearly correlated, this is bad practise for a regression model. If the step-up and step-down resulted in different models, the one with the higest value of $R^{2}$, the lowest number of explanatory variables and no collinear variables would be prefered. 
 
 **Round 1: expend ~ bad, crime, lawyers, employ, pop**
 
-| **Explantory Variables** | bad | crime | lawyers | employ | pop | 
-|--------------------------|-----|-------|---------|--------| ----|
-| **p-value**              |0.02719|0.25534|0.00592|0.00354|0.03184|
+| **Explantory Variables** | bad | crime | lawyers | employ | pop   | 
+|--------------------------|-----|-------|---------|--------| ----  |
+| **p-value**              |0.02719|0.25534|0.00592|0.00354 |0.03184|
 
 **Round 2: expend ~ bad, lawyers, employ, pop**
 
@@ -274,8 +294,6 @@ summary(lm(expend~bad+lawyers+employ+pop,data=data))
 summary(lm(expend~bad+lawyers+employ,data=data))
 summary(lm(expend~lawyers+employ, data=data))
 ```
-<!-- If step-up and step-down yield two different models, choose one and motivate your choice -->
-Using the step-up and step-down method resulted in two different models. The advantage of the model constructed using the step-up method (expend ~ employ bad crime) is that the variables are not collinear. The advantages of the model constructed using the step-down method (expend ~ lawyers employ) are that the value of $R^{2}$ (0.9632) is higher compared to the $R^{2}$ value of the step-up model (0.9568) and the model contains fewer explanatory variables. However, as the collinearity of variables weight higher compared to number of variables and the difference of $R^{2}$ is relatively small, we prefer the model constructed using the step-up model. We even consider removing the variable bad of the step-up model as it can be argued to have a collinear relation with the variable employ.
 
 **c)**
 <!-- Check the model assumptions by using relevant diagnostic tools -->
@@ -336,7 +354,6 @@ qqnorm(residuals(expendlm))
 
 # A
 cow = read.table("cow.txt", header = TRUE);
-#There are two factors that influence the milk production
 mm = subset(cow, treatment=="A")["milk"]
 sf = subset(cow, treatment=="B")["milk"]
 mm1 = as.numeric(unlist(mm))
@@ -351,7 +368,6 @@ library(lme4)
 cow$order=factor(cow$order)
 cowlmer = lmer(milk~treatment+order+per+(1|id), data=cow, REML = FALSE)
 summary(cowlmer)
-
 cowlmerTreatment = lmer(milk~order+per+(1|id), data=cow, REML = FALSE)
 anova(cowlmerTreatment, cowlmer)
 cowlmerOrder = lmer(milk~treatment+per+(1|id), data=cow, REML = FALSE)
@@ -386,6 +402,40 @@ pr=sum(tstar>test_statistic)/B;pr
 #C
 chisq.test(xtabs(~patientdata$medicine+patientdata$nausea))
 
-```
+# --- Exercise 5 --- #
 
+#A
+data=read.table(file="expensescrime.txt",header=TRUE)
+plot(data)
+par(mfrow=c(1,ncol(data)-1)) # minus the state column
+for (i in 2:ncol(data)) hist(data[,i],xlab=names(data)[i],main=NULL)
+par(mfrow=c(1,ncol(data)-1)) # minus the state column
+for (i in 2:ncol(data)) boxplot(data[,i],main=names(data)[i])
+par(mfrow=c(1,5))
+plot(data$bad, data$expend,xlab="bad",ylab="expend");abline(lm(expend ~ bad, data=data))
+plot(data$crime, data$expend,xlab="crime",ylab="expend");abline(lm(expend ~ crime, data=data))
+plot(data$lawyers, data$expend,xlab="lawyers",ylab="expend");abline(lm(expend ~ lawyers, data=data))
+plot(data$employ, data$expend,xlab="employ",ylab="expend");abline(lm(expend ~ employ, data=data))
+plot(data$pop, data$expend,xlab="pop",ylab="expend");abline(lm(expend ~ pop, data=data))
+round(cor(data[,3:7]),2) # exclude state and expend
+#B
+summary(lm(expend~bad,data=data))
+summary(lm(expend~crime,data=data))
+summary(lm(expend~lawyers,data=data))
+summary(lm(expend~employ,data=data))
+summary(lm(expend~pop,data=data))
+summary(lm(expend~employ+bad,data=data))
+summary(lm(expend~employ+crime,data=data))
+summary(lm(expend~employ+lawyers,data=data))
+summary(lm(expend~employ+pop,data=data))
+summary(lm(expend~employ+lawyers+bad,data=data))
+summary(lm(expend~employ+lawyers+crime,data=data))
+summary(lm(expend~employ+lawyers+pop,data=data))
+summary(lm(expend~bad+crime+lawyers+employ+pop,data=data))
+summary(lm(expend~bad+lawyers+employ+pop,data=data))
+summary(lm(expend~bad+lawyers+employ,data=data))
+summary(lm(expend~lawyers+employ, data=data))
+#C
+
+```
 
