@@ -39,11 +39,7 @@ breadaov=lm(hours~humidity*environment, data = bread);
 anova(breadaov)
 ```
 
-**d)** <!-- Need review --> According to the means of squares, on average the environment has the largest effect on the decay. However, this can not easily be concluded as it is being compared to one base (the first category), instead of a more comprehensive analysis.
-
-```{r}
-summary(breadaov)$coefficients
-```
+**d)** <!-- Need review --> According to the means of squares, on average the environment has the largest effect on the decay. However, this can not easily be concluded as it is being compared to one base (the first category), instead of a more comprehensive analysis. A different method could be to look at the distribution (mean and sd) of the two factors and simply use a two smaple t-test to determine which factor has the slower decay and how significant.
 
 **e)** The first requirement is that for each unique category, there should be at least 2 samples, which is the case. Then, the most important requirement is that the data among the factors should approximately have equal variances. This has been tested in b) and the conclusion was that they approximately were the same. A different test we can do after the ANOVA test, is check whether the error is normally distributed, which can be expected from a random variable. In the QQ-plot, it can be seen that the residuals are approximately normally distributed. In the fitted residuals plot, it can be seen that the spread is approximately horizontally symmetric among the fitted values, however, there are 2 outliers in the middle. 
 
