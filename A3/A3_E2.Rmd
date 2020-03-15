@@ -10,5 +10,28 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Exercise 2
+<!--  * study effect new teaching method psi
+      * 32 students
+      * assignment pass/fail
+      * gpa 0 - 4 -->
 
-**a)**
+**a)** <!-- Study the data and give a few (> 1) summaries (graphics or tables). -->
+
+**b)** <!-- Fit a logistic regression model with both explanatory variables. Does psi work? -->
+
+**c)** <!-- Estimate the probability that a student with a gpa equal to 3 who receives psi passes the assignment. Estimate the same probability for a student who does not receive psi. -->
+
+**d)** <!-- Estimate the relative change in odds of passing the assignment rendered by instructing students with psi rather than the standard method (for an arbitrary student). What is the interpretation of this number? Is it dependent on gpa? -->
+
+<!-- Consider the following alternative method of analysis. Out of 18 students who did not receive psi 3 showed improvement, of the 14 remaining students 8 showed improvement. We perform a test for comparing two binomial proportions: we have two sequences of independent binary “experiments”, of lengths 18 and 14. The experiments in the first sequence have success probability p 1 , those in the second p 2 . We wish to test the null hypothesis H 0 : p 1 = p 2 using the observed numbers of successes 3 and 8. You can apply Fisher’s exact test or the chisquare test for a 2x2 table. In R you can simply type: -->
+
+``` {r}
+> x=matrix(c(3,15,8,6),2,2); x
+> fisher.test(x)
+```
+
+**e)** <!-- Do this. What are the numbers 15 and 6 in this table? What is the conclusion? -->
+
+**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? -->
+
+**g)** <!-- Name both an advantage and a disadvantage of the two approaches, relative to each other. -->
