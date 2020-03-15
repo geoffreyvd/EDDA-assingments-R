@@ -1,0 +1,14 @@
+---
+title: "Assignment 3 Exercise 3"
+author: "Geoffrey"
+date: "3/15/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 3
+
+**a)**
