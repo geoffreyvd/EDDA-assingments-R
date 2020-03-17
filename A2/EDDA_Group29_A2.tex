@@ -1,0 +1,846 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdftitle={EDDA Group 29 Assignment 2},
+            pdfauthor={Geoffrey van Driessel (12965065), Yizhen Zhao (2658811) \& Sophie Vos (2551583)},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs}
+% Fix footnotes in tables (requires footnote package)
+\IfFileExists{footnote.sty}{\usepackage{footnote}\makesavenoteenv{longtable}}{}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\title{\textbf{EDDA Group 29 Assignment 2}}
+\author{Geoffrey van Driessel (12965065), Yizhen Zhao (2658811) \& Sophie Vos
+(2551583)}
+\date{3/9/2020}
+
+\begin{document}
+\maketitle
+
+An overview of the R code is shown in the Appendix on page X.
+
+\hypertarget{exercise-1}{%
+\subsection{Exercise 1}\label{exercise-1}}
+
+\textbf{a)} A randomized design with two categorical factors, with (1)
+the first factor having three categorical levels, (2) the second factor
+having two levels and (3) having three samples for each unique category,
+can be produced with the following R code:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{I=}\DecValTok{3}\NormalTok{; J=}\DecValTok{2}\NormalTok{; N=}\DecValTok{3}
+\KeywordTok{rbind}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{I,}\DataTypeTok{each=}\NormalTok{N}\OperatorTok{*}\NormalTok{J),}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{J,N}\OperatorTok{*}\NormalTok{I),}\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{(N}\OperatorTok{*}\NormalTok{I}\OperatorTok{*}\NormalTok{J)))}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{b)} The boxplot and interaction plot below confirms our
+intuition: (1) a cold environment causes a much slower decay, (2) wet
+bread has a much wider distribution (variance), (3) on average dry bread
+decays slower than wet bread, however, (4) wet and cold (frozen) bread
+has the slowest decay. From the non-parallel lines in the interaction
+plot and the wide distribution of the wet sample, we conclude that the
+(wet) humidity amplifies the effect of the temperature and it can thus
+be explained by the strong interaction between the two factors (opposed
+to the errors in the measurement).
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\textbf{c)} We have three null hyphotheses: (1) \(H_0\) : there is no
+main effect of first factor (humidity), (2) \(H_0\) : there is no main
+effect of second factor (environment) and (3) \(H_0\) : there is no
+interactions between the two factors. From the two-way ANOVA result
+below, we reject all null hyphotheses. This means that both factors have
+a main effect on the decay time of bread, and the factors have an
+interaction effect.
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: hours
+##                      Df Sum Sq Mean Sq F value    Pr(>F)    
+## humidity              1  26912   26912  62.296 4.316e-06 ***
+## environment           2 201904  100952 233.685 2.461e-10 ***
+## humidity:environment  2  55984   27992  64.796 3.705e-07 ***
+## Residuals            12   5184     432                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\textbf{d)} According to the means of squares, on average the
+environment has the largest effect on the decay. However, this can not
+easily be concluded as it is being compared to one base (the first
+category), instead of a more comprehensive analysis.
+
+\begin{verbatim}
+##                                     Estimate Std. Error    t value     Pr(>|t|)
+## (Intercept)                              364   12.00000  30.333333 1.032769e-12
+## humiditywet                               72   16.97056   4.242641 1.142103e-03
+## environmentintermediate                 -124   16.97056  -7.306770 9.389760e-06
+## environmentwarm                         -100   16.97056  -5.892557 7.336887e-05
+## humiditywet:environmentintermediate     -180   24.00000  -7.500000 7.233671e-06
+## humiditywet:environmentwarm             -268   24.00000 -11.166667 1.073751e-07
+\end{verbatim}
+
+\textbf{e)} The first requirement is that for each unique category,
+there should be at least 2 samples, which is the case. Then, the most
+important requirement is that the data among the factors should
+approximately have equal variances. This has been tested in b) and the
+conclusion was that they approximately were the same. A different test
+we can do after the ANOVA test, is check whether the error is normally
+distributed, which can be expected from a random variable. In the
+QQ-plot, it can be seen that the residuals are approximately normally
+distributed. In the fitted residuals plot, it can be seen that the
+spread is approximately horizontally symmetric among the fitted values,
+however, there are 2 outliers in the middle.
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\hypertarget{exercise-2}{%
+\subsection{Exercise 2}\label{exercise-2}}
+
+\textbf{a)} The following code generates a random block design with five
+blocks, a factor with three levels and one sample per unique category.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{B=}\DecValTok{5}\NormalTok{;}
+\NormalTok{if1 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{)}
+\NormalTok{if2 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{6}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{if3 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{11}\OperatorTok{:}\DecValTok{15}\NormalTok{)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) }\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(if1[i], if2[i], if3[i]))}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{b)} The boxplots below suggest that indeed the skill level and
+the interfaces matter for the search time. We see that skill level 1 and
+interface 1 are the fastest. From the interaction plots below, we
+observe clear interaction effects. Overall, the factors have the same
+pattern, namely, all lines start in the lower left corner and end
+towards the upper right corner. However, they are not perfectly
+parallel, this can be explained by the small sample sizes which cause
+local irregularities. Thus, we conclude that there is no interaction
+between the two factors.
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-7-1.pdf}
+
+\textbf{c)} \(H_0\) : search time is the same for all interfaces. From
+the ANOVA results below, it can be concluded that \(H_0\) is rejected.
+This means that the search time is not the same for all interfaces.
+Furthermore, we can estimate the time it takes for a user with skill
+level 3 to find a product using interface 2 by looking at the summary
+table and adding the coefficients of these two categories to the
+intercept. In this case, that would be \(15.015+3.033+2.7=20.748\).
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: time
+##           Df Sum Sq Mean Sq F value  Pr(>F)  
+## interface  2 50.465 25.2327  7.8237 0.01310 *
+## skill      4 80.051 20.0127  6.2052 0.01421 *
+## Residuals  8 25.801  3.2252                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = time ~ interface + skill, data = search)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.5733 -0.6967  0.3867  1.0567  1.7867 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)   15.013      1.227  12.238 1.85e-06 ***
+## interface2     2.700      1.136   2.377  0.04474 *  
+## interface3     4.460      1.136   3.927  0.00438 ** 
+## skill2         1.300      1.466   0.887  0.40118    
+## skill3         3.033      1.466   2.069  0.07238 .  
+## skill4         5.300      1.466   3.614  0.00684 ** 
+## skill5         6.100      1.466   4.160  0.00316 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.796 on 8 degrees of freedom
+## Multiple R-squared:  0.8349, Adjusted R-squared:  0.7111 
+## F-statistic: 6.745 on 6 and 8 DF,  p-value: 0.008395
+\end{verbatim}
+
+\textbf{d)} The QQ-plot of the residuals below looks normally
+distributed, which is good. The fitted residuals do not depict any
+outliers.
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\textbf{e)} The result of the Friedman test is the same as the ANOVA
+test: we reject the \(H_0\) mentioned before, thus, there is a
+difference in search times.
+
+\begin{verbatim}
+## 
+##  Friedman rank sum test
+## 
+## data:  search$time, search$interface and search$skill
+## Friedman chi-squared = 6.4, df = 2, p-value = 0.04076
+\end{verbatim}
+
+\textbf{f)} The one-way ANOVA returns no significant difference in the
+search time between the interfaces. This result is not very useful,
+because (1) we removed a lot of information from the model and (2) the
+model now assumes that the block is a random selection of all available
+blocks, which is not the case because the blocks were
+fixed/predetermined.
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: time
+##           Df  Sum Sq Mean Sq F value  Pr(>F)  
+## interface  2  50.465  25.233  2.8605 0.09642 .
+## Residuals 12 105.852   8.821                  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\hypertarget{exercise-3}{%
+\subsection{Exercise 3}\label{exercise-3}}
+
+\textbf{a)} First, we evaluate normality of the dataset. From the
+QQ-plots below, we conclude that both treatment samples are normally
+distributed. There are three hypotheses: (1) \(H_0\) (id) : there is no
+difference in milk production between cows, (2) \(H_0\) (per) : there is
+no difference in milk production in different periods and (3) \(H_0\)
+(treatment) : there is no difference in milk production with different
+treatment. From the ANOVA results below, we can conclude that within-cow
+variation (see variable ``id'') the milk production differs. Because the
+p-value for id is less than the significance level of 0.05, therefore,
+the first \(H_0\) is rejected. Furthermore, from the summary, we can
+conclude that most of the cows (except id4) are different from the cow
+with id1. Afterwards, we could see p-value for per is less than 0.05, so
+we reject the second \(H_0\) which means that whether a cow is going
+through the first period or second seems to make a difference.
+Furthermore, as the p-value of treatment is equal to 0.51654, we do not
+reject the third \(H_0\). This means that treatment A does not
+significantly differ from treatment B. This could be seen from the
+second table (treatment B). In conclusion, the type of feedingstuffs
+doesn't influence the milk production. And the summary below indicates
+that there is no significant difference in milk production.
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: milk
+##           Df  Sum Sq Mean Sq  F value    Pr(>F)    
+## id         8 2467.47 308.434 124.4832 7.494e-07 ***
+## per        1   24.50  24.500   9.8881   0.01628 *  
+## treatment  1    1.16   1.156   0.4666   0.51654    
+## Residuals  7   17.34   2.478                       
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = milk ~ id + per + treatment, data = cow)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.2600 -0.4375  0.0000  0.4375  2.2600 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  30.3000     1.2444  24.349 5.02e-08 ***
+## id2          23.0000     1.5741  14.612 1.68e-06 ***
+## id3          11.1500     1.5741   7.084 0.000196 ***
+## id4          -1.3500     1.5741  -0.858 0.419480    
+## id5          -7.0500     1.5741  -4.479 0.002870 ** 
+## id6          23.4500     1.5741  14.898 1.47e-06 ***
+## id7          13.5500     1.5741   8.608 5.69e-05 ***
+## id8           4.9000     1.5741   3.113 0.017011 *  
+## id9         -11.2000     1.5741  -7.115 0.000191 ***
+## per2         -2.3900     0.7466  -3.201 0.015046 *  
+## treatmentB   -0.5100     0.7466  -0.683 0.516536    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.574 on 7 degrees of freedom
+## Multiple R-squared:  0.9931, Adjusted R-squared:  0.9832 
+## F-statistic: 100.6 on 10 and 7 DF,  p-value: 1.349e-06
+\end{verbatim}
+
+\textbf{b)} In this exercise, we model the cows effect as a random
+effect by using the function lmer.
+
+\begin{verbatim}
+## Loading required package: Matrix
+\end{verbatim}
+
+\begin{verbatim}
+## Linear mixed model fit by maximum likelihood  ['lmerMod']
+## Formula: milk ~ treatment + order + per + (1 | id)
+##    Data: cow
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##    119.3    124.7    -53.7    107.3       12 
+## 
+## Scaled residuals: 
+##      Min       1Q   Median       3Q      Max 
+## -1.53112 -0.37104  0.02686  0.26748  1.72489 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  id       (Intercept) 133.145  11.539  
+##  Residual               1.927   1.388  
+## Number of obs: 18, groups:  id, 9
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  38.5000     5.8110   6.625
+## treatmentB   -0.5100     0.6585  -0.775
+## orderBA      -3.4700     7.7685  -0.447
+## per2         -2.3900     0.6585  -3.630
+## 
+## Correlation of Fixed Effects:
+##            (Intr) trtmnB ordrBA
+## treatmentB -0.063              
+## orderBA    -0.743  0.000       
+## per2       -0.063  0.111  0.000
+\end{verbatim}
+
+Based on the three p-values below, first we do not reject \(H_0\) for
+treatment. This means that treatment is not important. Secondly, we do
+not reject \(H_0\) for order. Therefore, the order of treatment AB is
+not important.Finally we reject \(H_0\) for per, which means whether a
+cow is going through the first treatment or second is important. The
+results are the same as the result in a).
+
+\begin{verbatim}
+## Data: cow
+## Models:
+## cowlmerTreatment: milk ~ order + per + (1 | id)
+## cowlmer: milk ~ treatment + order + per + (1 | id)
+##                  Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)
+## cowlmerTreatment  5 117.89 122.34 -53.946   107.89                         
+## cowlmer           6 119.31 124.65 -53.656   107.31 0.5807      1      0.446
+\end{verbatim}
+
+\begin{verbatim}
+## Data: cow
+## Models:
+## cowlmerOrder: milk ~ treatment + per + (1 | id)
+## cowlmer: milk ~ treatment + order + per + (1 | id)
+##              Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)
+## cowlmerOrder  5 117.51 121.96 -53.755   107.51                         
+## cowlmer       6 119.31 124.65 -53.656   107.31 0.1973      1     0.6569
+\end{verbatim}
+
+\begin{verbatim}
+## Data: cow
+## Models:
+## cowlmerPer: milk ~ treatment + order + (1 | id)
+## cowlmer: milk ~ treatment + order + per + (1 | id)
+##            Df    AIC    BIC  logLik deviance  Chisq Chi Df Pr(>Chisq)   
+## cowlmerPer  5 125.43 129.88 -57.714   115.43                            
+## cowlmer     6 119.31 124.65 -53.656   107.31 8.1151      1    0.00439 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\textbf{c)} From the p-value below we do not reject \(H_0\) for
+treatment. This means the treatment is not important. From previous
+analysis, the same conclusion was reached. Given the design, it is
+inappropriate to use the paired t-test. Since the previous analysis
+shows that factors such as per have a significant effect on the milk
+production, it might be unwise to ignore such factors.
+
+\begin{verbatim}
+## 
+##  Paired t-test
+## 
+## data:  milk[treatment == "A"] and milk[treatment == "B"]
+## t = 0.22437, df = 8, p-value = 0.8281
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -2.267910  2.756799
+## sample estimates:
+## mean of the differences 
+##               0.2444444
+\end{verbatim}
+
+\hypertarget{exercise-4}{%
+\subsection{Exercise 4}\label{exercise-4}}
+
+\textbf{a)} We created a data frame that contains two columns: nausea
+and medicine. For patients who suffer from nausea, the variable nausea
+is set to 1. For patients who do not suffer from nausea, the variable is
+set to 0. We validated that the newly constructed data frame is similar
+to the dataset by comparing the output of the xtabs function to the
+original data.
+
+\begin{verbatim}
+##                        nausea
+## medicine                  0   1
+##   Chlorpromazine        100  52
+##   Pentobarbital (100mg)  32  35
+##   Pentobarbital (150mg)  48  37
+\end{verbatim}
+
+\textbf{b)} We perform a permutation test to test \(H_0\) : the
+medicines work equally well against nausea. To perform this test, we
+create 1000 random samples (permutations) of the medication data in
+which the order varies. We match these permutations of the medication
+data to the ordered nausea data and calculate the chi-square test
+statistic. The results of the test statistics of the permutations are
+shown in the histogram below. The result of the chi-square test
+statistic of the original data is 6.63. We observe that this value
+deviates from most values in the histogram. To confirm this, we
+calculated that the p-value is equal to 0.029. The p-value is smaller
+than the significance level of 0.05, therefore, \(H_0\) is rejected and
+we can conclude that the different medicines do not work equally well
+against nausea.
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-17-1.pdf}
+
+\textbf{c)} When performing the chi-squared test, we observe that the
+p-value is equal to 0.03643. This is smaller than the significance level
+of 0.05, therefore, \(H_0\) (the medicines work equally well against
+nausea) is rejected. This is a similar outcome to the permutation test,
+however, the p-values do differ. The values lie close to each other as
+both tests are valid in this situation and compare the proportion of
+expected outcomes (when assuming no dependence) to the actual outcome.
+The difference can be explained by the different way of calculating the
+p-value. Using the permutation test, the p-value is calculated by
+calculating the number of times that the test statistics of the permuted
+data is smaller than the test statistic of the original data. Using the
+chi-squared test, the p-value is calculated by comparing the proportion
+of rows and columns of independend data to the proportion of rows and
+columns of the actual data.
+
+\begin{verbatim}
+## 
+##  Pearson's Chi-squared test
+## 
+## data:  xtabs(~patientdata$medicine + patientdata$nausea)
+## X-squared = 6.6248, df = 2, p-value = 0.03643
+\end{verbatim}
+
+\hypertarget{exercise-5}{%
+\subsection{Exercise 5}\label{exercise-5}}
+
+In our regression analysis, the response variable is ``expend'' and the
+explanatory variables are: ``bad, crime, lawyers, employ and pop''. The
+purpose is to explain expend by a numerical function of the explanatory
+variables.
+
+\textbf{a)} First, we make a graphical summary of the data by plotting
+each variable against the others. Furthermore, we construct a histogram
+of all the numerical variables. Looking at the plots, we observe that
+expend, lawyers, employ and pop all approximate a linear relationship
+with each other. Furthermore, state and crime have nonlinear
+relationhsips with all the other variables. Lastly, the variable bad can
+be argued to have a weak linear relationship with the variables expend,
+lawyers, employ and pop. Looking at the histograms, it is interesting to
+see that almost all variables (expend, bad, lawyers, employ and pop)
+follow a similar pattern, namely, the lowest value appears frequently
+and as the value increases, the frequency decreases steeply. Except for
+a few outliers of frequently occuring high values. In contrast, the
+variable crime shows a different pattern. Namely, the values in the
+middle occur also relatively frequently. But the rule: as the value
+increases, the frequency decreases, applies as well.
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-19-1.pdf}
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+To build an intuition of the linear relationship between the depandable
+variable (expand) and its explanatory variable, we have plotted the
+explanatory variables against the dependaple variable below. These are
+the same plots as from the first plot with all factors plotted against
+each other, but now we can take a closer look. From the plots we can see
+a strong linear relationship between the dependable expend and 4 of the
+five factors: bad, lawyers, employ and pop. However we see very big
+outliers, which will have to be adjusted for, otherwise they will have a
+very big weight in the factor coefficient from the linear regression.
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-21-1.pdf}
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-21-2.pdf}
+A potential point is an outlier in an explanatory variable. The effect
+can be studied by fitting the model with and without the potential
+point. If the estimated parameters change drastically when removing the
+potenetial point, the observation is called an influence point. Using
+the Cook's formula, the distance of an observation on the predictions
+can be calculated. Whenever the Cook's distance for an observation
+approximates or is larger than 1, the observation can be considered to
+be an influence point. As we have not constructed a model yet, we
+analyse the potential and influence points of our chosen model in c).
+Another relevent concept is collinearity. This is the problem of linear
+relations between explanatory variables. Collinearity can be detected by
+a straight line in a scatter plot or by calculating the correlation
+coefficient. Looking at the scatter plots of the data, we suspect
+collinearity between the variables expend, lawyers, employ and pop. We
+confirm this by calculating the correlaction coeffiecients of all
+possible variable combinations. Looking at the output below, we observe
+that all the combinations of the variables expend, lawyers, employ and
+pop have a correlation coefficient above 93. Thus, we conclude that
+these variables have a collinear relation. The variable bad has a weaker
+collinear relation with the variables expend, lawyers, employ and pop,
+namely, ranging from 0.83 to 0.93. Lastly, the variable crime has no
+collinear relation with any of the other variables. When collinearity is
+detected among variables, we should avoid having both explanatory
+variables in the model.
+
+\begin{verbatim}
+##         expend  bad crime lawyers employ  pop
+## expend    1.00 0.83  0.33    0.97   0.98 0.95
+## bad       0.83 1.00  0.37    0.83   0.87 0.92
+## crime     0.33 0.37  1.00    0.38   0.31 0.28
+## lawyers   0.97 0.83  0.38    1.00   0.97 0.93
+## employ    0.98 0.87  0.31    0.97   1.00 0.97
+## pop       0.95 0.92  0.28    0.93   0.97 1.00
+\end{verbatim}
+
+\textbf{b)} To fit a linear regression model to the data, first, we
+start with the step-up method. Using this method, we start by fitting
+all possible simple linear regression models and calculate the
+determination coefficient (\(R^{2}\)). The results are shown in the
+table below. Looking at this table, we observe that employ has the
+largerst value of \(R^{2}\) (0.954) and is thus selected. Next, we
+combine this variable with all the variables that do not have a
+collinear relation with employ. These are the explanatory variables bad
+and crime. Note that the variable bad still can be considered to be
+linearly correlated to employ. Adding the variables bad and crime to the
+models yields in \(R^{2}\) = 0.9551. This is an improvement compared to
+the previous model. Therefore, we continue to add the other vairables to
+the model. For both models, there is just one variable to add. This
+results in the last possible option: a model of employ, bad and crime
+combined. This result in \(R^{2}\) = 0.9568, the highest value so far.
+As there are no more variables to add, the method stops here. The
+resulting model is: expend = -2.857\(e^{+02}\) + 4.979\(e^{-02}\) *
+employ - 1.391\(e^{+00}\) * bad + 3.810\(e^{-02}\) * crime + error. We
+have to be carefull as it could be argued that the variables employ and
+bad are collinear. Therefore, the model that is constructed with the
+variables employ and crime (expend = -2.484\(e^{+02}\) +
+4.630\(e^{-02}\) * employ + 2.962\(e^{-02}\) * crime + error) might be a
+better model as it contains fewer variables and the value of \(R^{2}\)
+is similar.
+
+\begin{longtable}[]{@{}lllllllll@{}}
+\toprule
+\begin{minipage}[b]{0.15\columnwidth}\raggedright
+\textbf{Explantory Variable(s)}\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright
+bad\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright
+crime\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+lawyers\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright
+employ\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright
+pop\strut
+\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+bad, employ\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright
+crime, employ\strut
+\end{minipage} & \begin{minipage}[b]{0.11\columnwidth}\raggedright
+bad, crime, employ\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.15\columnwidth}\raggedright
+\textbf{Multiple R-squared}\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+0.6964\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+0.1119\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+0.9373\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+0.954\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+0.9073\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+0.9551\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
+0.9551\strut
+\end{minipage} & \begin{minipage}[t]{0.11\columnwidth}\raggedright
+0.9568\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+Second, we use the step-down method. This method start with fitting all
+explanatory variables in the so-called full model. In each iteration,
+one explanatory variable is removed. This time, we try the model with
+all variables, regardless of collinearity. In round 1, we observe that
+the variable crime has the highest p-value, 0.25534 \textgreater{} 0.05,
+therefore, the variable crime will be removed. In round 2, pop has the
+highest p-value, 0.06012 \textgreater{} 0.05, therefore, the variable
+pop will be removed. In round 3, bad has the highest p-value, 0.34496
+\textgreater{} 0.05, therefore, the variable bad will be removed. In
+round 4, lawyers has the highest p-value, 0.00113 \textless{} 0.05,
+therefore, the variable will not be removed and the method stops. This
+results in the model expend = -1.107\(e^{+02}\) + 2.686\(e^{-02}\) *
+lawyers + 2.971\(e^{-02}\) * employ + error.
+
+\textbf{Round 1: expend \textasciitilde{} bad, crime, lawyers, employ,
+pop}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+\textbf{Explantory Variables} & bad & crime & lawyers & employ &
+pop\tabularnewline
+\midrule
+\endhead
+\textbf{p-value} & 0.02719 & 0.25534 & 0.00592 & 0.00354 &
+0.03184\tabularnewline
+\bottomrule
+\end{longtable}
+
+\textbf{Round 2: expend \textasciitilde{} bad, lawyers, employ, pop}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\textbf{Explantory Variables} & bad & lawyers & employ &
+pop\tabularnewline
+\midrule
+\endhead
+\textbf{p-value} & 0.05402 & 0.00106 & 0.00380 & 0.06012\tabularnewline
+\bottomrule
+\end{longtable}
+
+\textbf{Round 3: expend \textasciitilde{} bad, lawyers, employ}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\textbf{Explantory Variables} & bad & lawyers & employ\tabularnewline
+\midrule
+\endhead
+\textbf{p-value} & 0.34496 & 0.00147 & 1.2\(e^{-06}\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+\textbf{Round 4: expend \textasciitilde{} lawyers, employ}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+\textbf{Explantory Variables} & lawyers & employ\tabularnewline
+\midrule
+\endhead
+\textbf{p-value} & 0.00113 & 4.89\(e^{-07}\)\tabularnewline
+\bottomrule
+\end{longtable}
+
+Using the step-up and step-down method resulted in two different models.
+The advantage of the model constructed using the step-up method (expend
+\textasciitilde{} employ bad crime) is that the variables are not
+collinear. The advantages of the model constructed using the step-down
+method (expend \textasciitilde{} lawyers employ) are that the value of
+\(R^{2}\) (0.9632) is higher compared to the \(R^{2}\) value of the
+step-up model (0.9568) and the model contains fewer explanatory
+variables. However, as the collinearity of variables weight higher
+compared to number of variables and the difference of \(R^{2}\) is
+relatively small, we prefer the model constructed using the step-up
+model. We even consider removing the variable bad of the step-up model
+as it can be argued to have a collinear relation with the variable
+employ.
+
+\textbf{c)} We check the model (expend \textasciitilde{} employ crime)
+assumptions (linearity of the relation and normality of the errors)
+using both graphical and numerical tools. First, we look at the scatter
+plot of the response variable against each explanatory variable
+separately. This is visualized in a). For each combination with expend,
+we see two outliers at the right of the scatter plots. Moreover, the
+relation with the variables bad, lawyers, employ and pop is linear and
+nonlinear combined with state and crime. Second, we construct the
+scatter plot of the residuals against each explanatory variable that is
+in the model (crime and employ) seperately. The plot with crime contains
+a cluster around the middle line and the plot with employ has a cluster
+in the bottom left diagnal with two outliers in the upper right corner.
+This means\ldots{} Third, we construct the added variable plot. In this
+plot, the residuals of the explanatory variables are plotted against the
+residuals of the model without that specific variable. This shows the
+effect of adding an explanatory variable to the model. Looking at the
+figure, we observe that the plots for bad, lawyers and pop contain
+compact clusters. The plots of crime and employ are more spread. This
+means\ldots{} Next, we construct the scatter plots of the residuals
+against each explanatory variable that is not in the model (bad, lawyers
+and pop) seperatly. The outputs are similar to each other. When looking
+at the pattern we do not observe a linear relation and therefore should
+not include more variables. Afterwards, we construct the scatter plot of
+the reduals against the response variable and the fitted model. We
+observe little spread as in both plots there is a cluster around zero
+with only few outliers. This means\ldots{} Lastly, we check the
+normality assumption by constructing a qq-plot and conduction
+Shapiro-Wilk's test. We cannot assume normality as the qq-plot does not
+approximate a straight line, this means that the model is invalid.
+Unfortunetely, none of the other models resulted in a normal
+distribution of the residuals.
+
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-25-1.pdf}
+\includegraphics{EDDA_Group29_A2_files/figure-latex/unnamed-chunk-25-2.pdf}
+
+\hypertarget{appendix-r-code}{%
+\subsection{Appendix: R code}\label{appendix-r-code}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# --- Exercise 3 --- #}
+
+\CommentTok{# A}
+\NormalTok{cow =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"cow.txt"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{);}
+\CommentTok{#There are two factors that influence the milk production}
+\NormalTok{mm =}\StringTok{ }\KeywordTok{subset}\NormalTok{(cow, treatment}\OperatorTok{==}\StringTok{"A"}\NormalTok{)[}\StringTok{"milk"}\NormalTok{]}
+\NormalTok{sf =}\StringTok{ }\KeywordTok{subset}\NormalTok{(cow, treatment}\OperatorTok{==}\StringTok{"B"}\NormalTok{)[}\StringTok{"milk"}\NormalTok{]}
+\NormalTok{mm1 =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{unlist}\NormalTok{(mm))}
+\NormalTok{sf1 =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(}\KeywordTok{unlist}\NormalTok{(sf))}
+\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\KeywordTok{qqnorm}\NormalTok{(mm1); }\KeywordTok{qqnorm}\NormalTok{(sf1)}
+\NormalTok{cow}\OperatorTok{$}\NormalTok{id =}\StringTok{ }\KeywordTok{factor}\NormalTok{(cow}\OperatorTok{$}\NormalTok{id); cow}\OperatorTok{$}\NormalTok{per =}\StringTok{ }\KeywordTok{factor}\NormalTok{(cow}\OperatorTok{$}\NormalTok{per)}
+\NormalTok{cowanova =}\StringTok{ }\KeywordTok{lm}\NormalTok{(milk}\OperatorTok{~}\NormalTok{id}\OperatorTok{+}\NormalTok{per}\OperatorTok{+}\NormalTok{treatment,}\DataTypeTok{data =}\NormalTok{ cow)}
+\KeywordTok{anova}\NormalTok{(cowanova); }\KeywordTok{summary}\NormalTok{(cowanova)}
+\CommentTok{# B}
+\KeywordTok{library}\NormalTok{(lme4)}
+\NormalTok{cow}\OperatorTok{$}\NormalTok{order=}\KeywordTok{factor}\NormalTok{(cow}\OperatorTok{$}\NormalTok{order)}
+\NormalTok{cowlmer =}\StringTok{ }\KeywordTok{lmer}\NormalTok{(milk}\OperatorTok{~}\NormalTok{treatment}\OperatorTok{+}\NormalTok{order}\OperatorTok{+}\NormalTok{per}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{id), }\DataTypeTok{data=}\NormalTok{cow, }\DataTypeTok{REML =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{summary}\NormalTok{(cowlmer)}
+
+\NormalTok{cowlmerTreatment =}\StringTok{ }\KeywordTok{lmer}\NormalTok{(milk}\OperatorTok{~}\NormalTok{order}\OperatorTok{+}\NormalTok{per}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{id), }\DataTypeTok{data=}\NormalTok{cow, }\DataTypeTok{REML =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{anova}\NormalTok{(cowlmerTreatment, cowlmer)}
+\NormalTok{cowlmerOrder =}\StringTok{ }\KeywordTok{lmer}\NormalTok{(milk}\OperatorTok{~}\NormalTok{treatment}\OperatorTok{+}\NormalTok{per}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{id), }\DataTypeTok{data=}\NormalTok{cow, }\DataTypeTok{REML =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{anova}\NormalTok{(cowlmerOrder, cowlmer)}
+\NormalTok{cowlmerPer =}\StringTok{ }\KeywordTok{lmer}\NormalTok{(milk}\OperatorTok{~}\NormalTok{treatment}\OperatorTok{+}\NormalTok{order}\OperatorTok{+}\NormalTok{(}\DecValTok{1}\OperatorTok{|}\NormalTok{id), }\DataTypeTok{data=}\NormalTok{cow, }\DataTypeTok{REML =} \OtherTok{FALSE}\NormalTok{)}
+\KeywordTok{anova}\NormalTok{(cowlmerPer, cowlmer)}
+\CommentTok{# C}
+\KeywordTok{attach}\NormalTok{(cow)}
+\KeywordTok{t.test}\NormalTok{(milk[treatment}\OperatorTok{==}\StringTok{"A"}\NormalTok{],milk[treatment}\OperatorTok{==}\StringTok{"B"}\NormalTok{],}\DataTypeTok{paired=}\OtherTok{TRUE}\NormalTok{)}
+
+\CommentTok{# --- Exercise 4 --- #}
+
+\CommentTok{# A}
+\NormalTok{data=}\KeywordTok{read.table}\NormalTok{(}\StringTok{"nauseatable.txt"}\NormalTok{,}\DataTypeTok{header=}\OtherTok{TRUE}\NormalTok{)}
+\NormalTok{nausea=}\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DataTypeTok{times=}\DecValTok{100}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DataTypeTok{times=}\DecValTok{52}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DataTypeTok{times=}\DecValTok{32}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DataTypeTok{times=}\DecValTok{35}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DataTypeTok{times=}\DecValTok{48}\NormalTok{),}
+  \KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DataTypeTok{times=}\DecValTok{37}\NormalTok{))}
+\NormalTok{medicine=}\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\StringTok{"Chlorpromazine"}\NormalTok{,}\DataTypeTok{times=}\DecValTok{152}\NormalTok{),}\KeywordTok{rep}\NormalTok{(}\StringTok{"Pentobarbital (100mg)"}\NormalTok{,}\DataTypeTok{times=}\DecValTok{67}\NormalTok{),}
+  \KeywordTok{rep}\NormalTok{(}\StringTok{"Pentobarbital (150mg)"}\NormalTok{,}\DataTypeTok{times=}\DecValTok{85}\NormalTok{))}
+\NormalTok{patientdata=}\KeywordTok{data.frame}\NormalTok{(nausea,medicine)}
+\KeywordTok{xtabs}\NormalTok{(}\OperatorTok{~}\NormalTok{medicine}\OperatorTok{+}\NormalTok{nausea,}\DataTypeTok{data=}\NormalTok{patientdata)}
+\CommentTok{#B}
+\NormalTok{medication=}\KeywordTok{factor}\NormalTok{(patientdata}\OperatorTok{$}\NormalTok{medicine)}
+\NormalTok{B=}\DecValTok{1000}
+\NormalTok{tstar=}\KeywordTok{numeric}\NormalTok{(B)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) \{}
+\NormalTok{  patientstar=}\KeywordTok{sample}\NormalTok{(medication) }\CommentTok{# permute medicine lables}
+\NormalTok{  tstar[i] =}\StringTok{ }\KeywordTok{chisq.test}\NormalTok{(}\KeywordTok{xtabs}\NormalTok{(}\OperatorTok{~}\NormalTok{patientstar}\OperatorTok{+}\NormalTok{patientdata}\OperatorTok{$}\NormalTok{nausea))[[}\DecValTok{1}\NormalTok{]] \}}
+\KeywordTok{hist}\NormalTok{(tstar)}
+\NormalTok{test_statistic=}\KeywordTok{chisq.test}\NormalTok{(}\KeywordTok{xtabs}\NormalTok{(}\OperatorTok{~}\NormalTok{patientdata}\OperatorTok{$}\NormalTok{medicine}\OperatorTok{+}\NormalTok{patientdata}\OperatorTok{$}\NormalTok{nausea))[[}\DecValTok{1}\NormalTok{]]}
+\NormalTok{pl=}\KeywordTok{sum}\NormalTok{(tstar}\OperatorTok{<}\NormalTok{test_statistic)}\OperatorTok{/}\NormalTok{B;pl}
+\NormalTok{pr=}\KeywordTok{sum}\NormalTok{(tstar}\OperatorTok{>}\NormalTok{test_statistic)}\OperatorTok{/}\NormalTok{B;pr}
+\CommentTok{#C}
+\KeywordTok{chisq.test}\NormalTok{(}\KeywordTok{xtabs}\NormalTok{(}\OperatorTok{~}\NormalTok{patientdata}\OperatorTok{$}\NormalTok{medicine}\OperatorTok{+}\NormalTok{patientdata}\OperatorTok{$}\NormalTok{nausea))}
+\end{Highlighting}
+\end{Shaded}
+
+\end{document}
