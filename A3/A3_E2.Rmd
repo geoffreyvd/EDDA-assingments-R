@@ -15,11 +15,64 @@ knitr::opts_chunk$set(echo = TRUE)
       * assignment pass/fail
       * gpa 0 - 4 -->
 
-**a)** <!-- Study the data and give a few (> 1) summaries (graphics or tables). -->
+**a)** <!-- Study the data and give a few (> 1) summaries (graphics or tables). --> We study the data by exploring all combinations of the variables. First, we investigate the relation between the variables psi and gpa. We are interested whether the students that receive psi have a similar GPA to the students not receiving psi. We visualized the data in the boxplots below. We observe that the GPAs of all students is evenly distributed. The same applies to the GPAs of the students who received psi, however, the boxplot is positioned slightly higher. Looking at the boxplot of the students who did not receive psi, we observe that student with GPAs below 2.5 are not represented. Moreover, the boxplot is positioned lower compared to the others. To investigate the data further, we constructed histograms. We observe that for students who receive psi, the GPAs higher than 3.0 occur more frequently. In contrast, for students that did not receive psi, the GPAs between 2.5 and 3.0 occur more frequently. Hence, it can be argued that the data is biased because for the group of students who receive psi, the higher GPAs occur more frequently, whereas, for the group of students who do not receive psi, the lower GPAs occur more frequently.
+
+```{r}
+data = read.table("psi.txt", header = TRUE);
+data_psi = subset(data, psi == 1)
+data_no_psi = subset(data, psi == 0)
+par(mfrow=c(1,3))
+boxplot(data$gpa,ylab="GPA",main="all students")
+boxplot(data_psi$gpa,ylab="GPA",main="students received psi")
+boxplot(data_no_psi$gpa,ylab="GPA",main="students not received psi",ylim=c(2.0,4.0))
+hist(data$gpa,xlab="GPA",main="all students")
+hist(data_psi$gpa,xlab="GPA",main="students received psi")
+hist(data_no_psi$gpa,xlab="GPA",main="students not received psi", breaks = c(2.0,2.5,3.0,3.5,4.0))
+```
+
+Next, we investigate the relation between the variables passed and gpa. Looking at the boxplots, we clearly see that students who passed the test have higher GPAs and the students who did not pass the test have lower GPAs. The histogram confirms this by showing higher frequencies of higher GPAs for students that passed the test and higher frequencies of lower GPAs for students that did not pass the test. Hence, it could be argued that students who have a higher GPA are more likely to pass the test.
+
+```{r}
+data_passed = subset(data, passed == 1)
+data_not_passed = subset(data, passed == 0)
+par(mfrow=c(1,3))
+boxplot(data$gpa,ylab="gpa",main="all students")
+boxplot(data_passed$gpa,ylab="gpa",main="students passed",ylim=c(2.0,4.0))
+boxplot(data_not_passed$gpa,ylab="gpa",main="students not passed",ylim=c(2.0,4.0))
+hist(data$gpa,xlab="gpa",main="all students")
+hist(data_passed$gpa,xlab="gpa",main="students passed")
+hist(data_not_passed$gpa,xlab="gpa",main="students not passed", breaks = c(2.0,2.5,3.0,3.5,4.0))
+```
+
+Lastly, we investigate the relation between the variables psi and passed. Looking at the barplots below, we observe that there are more students who did not pass the test compared to students who did pass the tests. In contrast, looking at the students who receiced psi, there are more students who passed than not passed, however, this difference is very small. For the students that did not receive psi, this difference is much larger and much more students did not pass compared to the students whi passed. When considering all the students again, we observe that the amount of students receiving and not receiving psi is evenly distributed. Slightly more students did not receive psi compared to the students who received psi. Moreover, we observe that of the students who passed, more received psi and of the students who did not pass, more did not receive psi. 
+
+```{r}
+par(mfrow=c(2,3))
+barplot(c(nrow(data_passed),nrow(data_not_passed)),ylim=c(0,21),main="all students",ylab="count",names.arg=c("passed","not passed"))
+barplot(c( nrow(subset(data_psi, passed == 1)),nrow(subset(data_psi,passed == 0))),ylim=c(0,21),main="students received psi",ylab="count",names.arg=c("passed","not passed"))
+barplot(c( nrow(subset(data_no_psi, passed == 1)),nrow(subset(data_no_psi,passed == 0))),ylim=c(0,21),main="students not received psi",ylab="count",names.arg=c("passed","not passed"))
+barplot(c(nrow(data_psi),nrow(data_no_psi)),ylim=c(0,21),main="all students",ylab="count",names.arg=c("psi","no psi"))
+barplot(c( nrow(subset(data_passed, psi == 1)),nrow(subset(data_passed,psi == 0))),ylim=c(0,21),main="students passed",ylab="count",names.arg=c("psi","no psi"))
+barplot(c( nrow(subset(data_not_passed, psi == 1)),nrow(subset(data_not_passed,psi == 0))),ylim=c(0,21),main="students not passed",ylab="count",names.arg=c("psi","no psi"))
+```
+
 
 **b)** <!-- Fit a logistic regression model with both explanatory variables. Does psi work? -->
+We fit a logistic regression model that explains if a students did psi based on their gpa and test score. We test the null hypotheses that doing psi does influence the gpa and test score. 
+
+```{r}
+glm = glm(psi~passed+gpa,data=data,family=binomial)
+summary(glm)
+model <- glm(psi~passed+gpa,data=data,family=binomial)
+summary(model)
+```
 
 **c)** <!-- Estimate the probability that a student with a gpa equal to 3 who receives psi passes the assignment. Estimate the same probability for a student who does not receive psi. -->
+```{r}
+tot=xtabs(~psi+gpa,data=data);tot
+per=xtabs(passed~psi+gpa,data=data);per
+round(per/tot,2)
+```
 
 **d)** <!-- Estimate the relative change in odds of passing the assignment rendered by instructing students with psi rather than the standard method (for an arbitrary student). What is the interpretation of this number? Is it dependent on gpa? -->
 
