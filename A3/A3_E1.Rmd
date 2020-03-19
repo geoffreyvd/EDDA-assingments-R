@@ -13,7 +13,7 @@ knitr::opts_chunk$set(fig.width=8, fig.height=4)
 #Exercise 1
 ##a) 
 <!-- Make an informative plot of the data. Investigate whether sexual activity influences longevity by performing a statistical test, without taking the thorax length into account.-->
-First we add a column 'loglongevity' into dataframe and use this outcome as response variable as follow, and then make some plot of the data. From the boxplot below we could see that the longivity for ftuitflies in group 'isolated' has the longest longevity, followed by 'low' and 'high'. The average longevity in group 'isolated' is the longest one. And group 'low' has the widest range of longevity in these three groups. For the scater plot, the points are distributed beside the line but quite of wide distributed, so a weak linear correlation can be seen between thorax and loglongevity. From the third plot we could see that both longevity and loglongevity have weak linear correlation with thorax. And for fruitflies in the scecond group 'isolated' can be seen gain longer longevity than the other two groups.
+First we add a column 'loglongivity' into dataframe and use this outcome as response variable as follow, and then make some plot of the data. From the boxplot below we could see that the longivity for ftuitflies in group 'isolated' has the longest longevity, followed by 'low' and 'high'. The average longevity in group 'isolated' is the longest one. And group 'low' has the widest range of longevity in these three groups. For the scater plot, the points are distributed beside the line but quite of wide distributed, so a weak linear correlation can be seen between thorax and loglongivity. From the third plot we could see that both longevity and loglongivity have weak linear correlation with thorax. And for fruitflies in the scecond group 'isolated' can be seen gain longer longevity than the other two groups.
 ```{r echo = FALSE}
 fliesdata = read.table("fruitflies.txt", header = TRUE)
 fliesdata$loglongivity = log(fliesdata$longevity)
@@ -24,14 +24,14 @@ fliesdata
 ```{r echo = FALSE}
 par(mfrow=c(1,2))
 plot(longevity~activity, data=fliesdata)
-plot(loglongevity~thorax, data=fliesdata);abline(lm(loglongevity~thorax, data=fliesdata))
+plot(loglongivity~thorax, data=fliesdata);abline(lm(loglongivity~thorax, data=fliesdata))
 pairs(fliesdata)
 ```
 <!--What are the estimated longevities for the three conditions? Comment.-->
 In order to investigate whether sexual activity influences longevity we performed one-way anova test. Null hypothesis here is sexual activity doesn't influence the longevity. According to the p-value below, it is smaller than the significance level 0.05. Therefore we reject $H_0$ here which means the sexual activity will influence the longevity.
 According the summary below we could see that for group 'high' the estimated longevity is 3.60212, for group 'isolated' is 3.60212 + 0.51722 = 4.11934 and for group 'low' is 3.60212 + 0.39771 = 3.99983. And 95% confidence intervals for 'high' is [3.4796296 3.7246190], for 'isolated' is [3.8236205, 4.4150772], for 'low' is [3.7041076, 4.2955643]
 ```{r echo = FALSE}
-fliesanova = lm(loglongevity~activity, data=fliesdata)
+fliesanova = lm(loglongivity~activity, data=fliesdata)
 anova(fliesanova)
 summary(fliesanova)
 confint(fliesanova)
@@ -43,7 +43,7 @@ Here we apply two-way anova considering two factors: activity and thorax. $H_0$ 
 ```{r echo = FALSE}
 fliesdata$activity = as.factor(fliesdata$activity)
 fliesdata$thorax = as.factor(fliesdata$thorax)
-fliesanova = lm(loglongevity~thorax*activity, data=fliesdata)
+fliesanova = lm(loglongivity~thorax*activity, data=fliesdata)
 anova(fliesanova)
 ```
 <!-- Does sexual activity increase or decrease longevity?  What are the estimated longevities for the three groups, for a fly with average thorax length? -->
@@ -55,7 +55,7 @@ According to the result, compared with the result in a) we could see that thorax
 ```{r echo = FALSE}
 fliesdata$activity = as.factor(fliesdata$activity)
 fliesdata$thorax = as.factor(fliesdata$thorax)
-fliesanova2 = lm(loglongevity~thorax+activity, data=fliesdata)
+fliesanova2 = lm(loglongivity~thorax+activity, data=fliesdata)
 anova(fliesanova2)
 summary(fliesanova2)
 mean(thorax,data=fliesdata)
@@ -73,19 +73,19 @@ Because thorax will influence the longevity, its dependence on activity is not s
 ```{r echo = FALSE}
 drop1(fliesanova2, test="F")
 contrasts(fliesdata$activity)=contr.sum
-fliesanova2 = lm(loglongevity~thorax+activity, data=fliesdata)
+fliesanova2 = lm(loglongivity~thorax+activity, data=fliesdata)
 summary(fliesanova2)
 ```
 
 <!-- Need review!! for the graph, couldn't get the line in plot -->
 From the summary below we could see that p-values for 'isolated:thorax' and 'low:thorax' are bigger than significance level 0.05, therefore we do not reject $H_0$ here which is there is no difference on thorax's dependence under three activities. So the dependence is similar under all three conditions of sexual activity.
 ```{r}
-plot(loglongevity~thorax, pch=unclass(activity))
-abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
+plot(loglongivity~thorax, pch=unclass(activity))
+abline(lm(loglongivity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongivity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongivity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
 ```
 
 ```{r}
-aovfliesinter = lm(loglongevity~activity*thorax, data=fliesdata)
+aovfliesinter = lm(loglongivity~activity*thorax, data=fliesdata)
 summary(aovfliesinter)
 ```
 
