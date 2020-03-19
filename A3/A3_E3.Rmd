@@ -29,19 +29,39 @@ summary(africaglm)
 
 We conclude that oligarchy, pollib and parties signifcantly estimate (or have a linear relation with) the amount of successful military coups. As we take pollib as a factor we find that categorie 2 (full civil rights) has significant less militairy coups (estimated 1.6903057 coups less) than pollib categorie 0.
 
-Furthermore the plotted residuals against the fitted values show kind of equal variances. However a pattern can be seen, but I am not sure what this indicates (as we are not familiar enough with deviance residuals).
+<!-- Furthermore the plotted residuals against the fitted values show kind of equal variances. However a pattern can be seen, but I am not sure what this indicates (as we are not familiar enough with deviance residuals). -->
 
+Furthermore we performed the plotted residuals against the fitted values and we can't recognized any specific pattern. Data is scatterted. Then we applied logarithm to make x-values fitted by a linear function. The plot seems ok and also not specific structure. Finally we set residuals' type as response and from the plot we see that the response residuals decreased with the (logarithm) of the fitted values, as not expected under a poisson model. 
 ```{r}
+par(mfrow=c(1,3))
 plot(log(fitted(africaglm)),residuals(africaglm))
+plot(log(fitted(africaglm)),residuals(africaglm))
+plot(log(fitted(africaglm)),residuals(africaglm, type="response"))
 ```
 
- 
-
 **b)**
-In the step down method we have removed the following factors in the order: fanumelec > numregim > size > popn > pctvote. With this process we went from a R squared value of 0.5652689 to 0.5017707, but reduced the formula from eight factors to three. The fitted values against the residuals look the same as before.
+In the step down method we have removed the following factors in the order: numelec > numregim > size > popn > pctvote. Our model now is miltcoup = 0.251377 + 0.092622*oligarchy - 0.574103*pollib + 0.022059*parties + error. With this process we went from a R squared value of 0.5652689 to 0.5017707, but reduced the formula from eight factors to three. The fitted values against the residuals look the same as before. And we show some plots for our model. All of them follow the similar pattern as full model. 
+
+```{r}
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numelec+numregim, family=poisson,data=africa))
+
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numregim, family=poisson,data=africa))
+
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size, family=poisson,data=africa))
+
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn, family=poisson,data=africa))
+
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote, family=poisson,data=africa))
+
+summary(glm(miltcoup~oligarchy+pollib+parties, family=poisson,data=africa))
+```
+
 ```{r}
 africaglm2=glm(miltcoup~oligarchy+pollib+parties, family=poisson,data=africa)
 with(summary(africaglm2), 1 - deviance/null.deviance)
 summary(africaglm2)
+par(mfrow=c(1,3))
 plot(log(fitted(africaglm2)),residuals(africaglm2))
+plot(log(fitted(africaglm2)),residuals(africaglm2))
+plot(log(fitted(africaglm2)),residuals(africaglm2, type="response"))
 ```
