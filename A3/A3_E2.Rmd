@@ -57,38 +57,25 @@ barplot(c( nrow(subset(data_not_passed, psi == 1)),nrow(subset(data_not_passed,p
 ```
 
 
-**b)** <!-- Fit a logistic regression model with both explanatory variables. Does psi work? -->
-We fit a logistic regression model that explains if a students did psi based on their gpa and test score. We test the null hypotheses that doing psi does influence the gpa and test score. 
+**b)** <!-- Fit a logistic regression model with both explanatory variables. Does psi work? --> We fit a logistic regression model that explains if a students did psi based on their gpa and test score. We test the null hypotheses that the gpa and test score do not influence receiving psi or not. We observe that the p-value for the variable passed is 0.0194. This is smaller than the significance level of 0.05. Therefore, we can conclude that passing the test or not does influence if a student receive psi or not. This means that psi works for passing the test. The p-value for the variable gpa is equal to 0.2326. This is smaller than the significance level. This means that the gpa does not influence whether a student received gpa or not.
 
 ```{r}
-glm = glm(psi~passed+gpa,data=data,family=binomial)
-summary(glm)
 model <- glm(psi~passed+gpa,data=data,family=binomial)
 summary(model)
 ```
 
 **c)** <!-- Estimate the probability that a student with a gpa equal to 3 who receives psi passes the assignment. Estimate the same probability for a student who does not receive psi. -->
-```{r}
-tot=xtabs(~psi+gpa,data=data);tot
-per=xtabs(passed~psi+gpa,data=data);per
-round(per/tot,2)
-```
 
 **d)** <!-- Estimate the relative change in odds of passing the assignment rendered by instructing students with psi rather than the standard method (for an arbitrary student). What is the interpretation of this number? Is it dependent on gpa? -->
 
-
 <!-- Consider the following alternative method of analysis. Out of 18 students who did not receive psi 3 showed improvement, of the 14 remaining students 8 showed improvement. We perform a test for comparing two binomial proportions: we have two sequences of independent binary “experiments”, of lengths 18 and 14. The experiments in the first sequence have success probability p 1 , those in the second p 2 . We wish to test the null hypothesis H 0 : p 1 = p 2 using the observed numbers of successes 3 and 8. You can apply Fisher’s exact test or the chisquare test for a 2x2 table. In R you can simply type: -->
-
-
-**e)** <!-- Do this. What are the numbers 15 and 6 in this table? What is the conclusion? -->
-
-We test the null hypothesis p1 = p2. This means that the null hypotheses states that students who do not receive psi and students who receive psi show the same improvement. In the matrix we put the numbers 3, 15, 8 and 6. These number mean the following: from the 18 students who do not receive psi, 3 show improvement. This means that 18 - 3 = 15 students do not show improvements. From the 14 students who receive psi, 8 show improvement. This means that 14 - 8 = 6 students do not show improvement. Running Fisher's test when comparing the two binomial proportions, results in the p-value of 0.0265. This is smaller than the significance level of 0.05 and, therefore, $H_0$ is rejected. Therefore, we conclude that students receiving and not receiving psi do not show a similar improvement.
+**e)** <!-- Do this. What are the numbers 15 and 6 in this table? What is the conclusion? --> We test the null hypothesis p1 = p2. This means that the null hypotheses states that students who do not receive psi and students who receive psi show the same improvement. In the matrix we put the numbers 3, 15, 8 and 6. These number mean the following: from the 18 students who do not receive psi, 3 show improvement. This means that 18 - 3 = 15 students do not show improvements. From the 14 students who receive psi, 8 show improvement. This means that 14 - 8 = 6 students do not show improvement. Running Fisher's test when comparing the two binomial proportions, results in the p-value of 0.0265. This is smaller than the significance level of 0.05 and, therefore, $H_0$ is rejected. Therefore, we conclude that students receiving and not receiving psi do not show a similar improvement.
 
 ``` {r}
 x=matrix(c(3,15,8,6),2,2); x
 fisher.test(x)
 ```
 
-**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? -->
+**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? --> No, the second approach is not wrong.
 
 **g)** <!-- Name both an advantage and a disadvantage of the two approaches, relative to each other. -->
