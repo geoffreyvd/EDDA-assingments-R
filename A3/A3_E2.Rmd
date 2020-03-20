@@ -75,7 +75,7 @@ p1 = nrow(gpa_3_psi_pass)/nrow(gpa_3_psi); p1
 p2 = nrow(gpa_3_no_psi_pass)/nrow(gpa_3_no_psi); p2
 ```
 
-**d)** <!-- Estimate the relative change in odds of passing the assignment rendered by instructing students with psi rather than the standard method (for an arbitrary student). What is the interpretation of this number? Is it dependent on gpa? --> Odds can be defined as $o = \frac{p}{(1 - p})$. Therefore, in order to calculate the odds, the propability of the event is required. Thus, we calculate the probaility that a students who received psi passes the assignment (p = 0.57) and the probability that a student who did not receive psi passes the assignment (p = 0.17). Then we calculate the odds which are $o = \frac{0.57}{1 - 0.57} = 1.3)$ and $o = \frac{0.17}{1 - 0.17} = 0.2)$ respectively.The relative change in odds can be calculated by deviding the increase of odds by using psi over the odds of passing when using the standard method. This translates to the formula: relative change in odds = (odds pass test psi - odds pass test no psi) / odds pass test no psi * 100 %. This results in: $\frac{1.3 - 0.2}{0.2} * 100 \% = 567 \%$. This means that using psi increases the odds of passing the test by 567 %.
+**d)** <!-- Estimate the relative change in odds of passing the assignment rendered by instructing students with psi rather than the standard method (for an arbitrary student). What is the interpretation of this number? Is it dependent on gpa? --> Odds can be defined as $o = \frac{p}{(1 - p})$. Therefore, in order to calculate the odds, the propability of the event is required. Thus, we calculate the probaility that a students who received psi passes the assignment (p = 0.57) and the probability that a student who did not receive psi passes the assignment (p = 0.17). Then we calculate the odds which are $o = \frac{0.57}{1 - 0.57} = 1.3)$ and $o = \frac{0.17}{1 - 0.17} = 0.2)$ respectively.The relative change in odds can be calculated by deviding the increase of odds by using psi over the odds of passing when using the standard method. This translates to the formula: relative change in odds = (odds pass test psi - odds pass test no psi) / odds pass test no psi * 100 %. This results in: $\frac{1.3 - 0.2}{0.2} * 100 \% = 567 \%$. This means that using psi increases the odds of passing the test by 567 %. We can intrepret this as an improvement of the test by receiving psi. This is not dependent on the gpa as the gpa are not part of the calculations.
 
 ```{r}
 psi = subset(data, psi == 1)
@@ -97,6 +97,8 @@ x=matrix(c(3,15,8,6),2,2); x
 fisher.test(x)
 ```
 
-**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? --> No, the second approach is not wrong.
+**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? --> No, the second approach is not wrong. It calculates the exact p-value based on the proportions of the data.
 
-**g)** <!-- Name both an advantage and a disadvantage of the two approaches, relative to each other. -->
+**g)** <!-- Name both an advantage and a disadvantage of the two approaches, relative to each other. --> 
+An advantage of Fisher's exact test over logistic regression is that it is more suitable to work with smaller numbers as is the case in our experiment.
+An advantage of logistic regression is that it includes a predictive model which the Fisher exact test lacks.
