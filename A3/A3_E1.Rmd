@@ -18,7 +18,6 @@ First we add a column 'loglongivity' into dataframe and use this outcome as resp
 fliesdata = read.table("fruitflies.txt", header = TRUE)
 fliesdata$loglongivity = log(fliesdata$longevity)
 attach(fliesdata)
-fliesdata
 ```
 
 ```{r echo = FALSE}
@@ -29,7 +28,7 @@ pairs(fliesdata)
 ```
 <!--What are the estimated longevities for the three conditions? Comment.-->
 In order to investigate whether sexual activity influences longevity we performed one-way anova test. Null hypothesis here is sexual activity doesn't influence the longevity. According to the p-value below, it is smaller than the significance level 0.05. Therefore we reject $H_0$ here which means the sexual activity will influence the longevity.
-According the summary below we could see that for group 'high' the estimated longevity is 3.60212, for group 'isolated' is 3.60212 + 0.51722 = 4.11934 and for group 'low' is 3.60212 + 0.39771 = 3.99983. And 95% confidence intervals for 'high' is [3.4796296 3.7246190], for 'isolated' is [3.8236205, 4.4150772], for 'low' is [3.7041076, 4.2955643]
+According the summary below we could see that for group 'high' the estimated longevity is 3.60, for group 'isolated' is 3.60 + 0.52 = 4.12 and for group 'low' is 3.60 + 0.39 = 3.99. And 95% confidence intervals for 'high' is [3.48 3.72], for 'isolated' is [3.82, 4.41], for 'low' is [3.70, 4.29]
 ```{r echo = FALSE}
 fliesanova = lm(loglongivity~activity, data=fliesdata)
 anova(fliesanova)
@@ -47,14 +46,13 @@ fliesanova = lm(loglongivity~thorax*activity, data=fliesdata)
 anova(fliesanova)
 ```
 <!-- Does sexual activity increase or decrease longevity?  What are the estimated longevities for the three groups, for a fly with average thorax length? -->
-
 From the result below we could see that the p-values for both activity and thorax are smaller than significant level 0.05. Therefore $H_0$ here are rejected which means acitivity and thorax will effect the longevity. 
-<!--Need review !! have problems in estimated longevities here, as sometimes i run the summary below i could get different result. once i get the result similar to the result in a) summary(fliesanova) so i could calculate the estimated longevity -->
-We calculated the mean of thorax equal to 0.82 and the estimated throax is 2.98. Therefore, estimated longevities for three groups are: 'high'=(0.82*2.98)+1.45=5.25. 'isolated'=(0.82*2.98)+1.45-0.23=5.02. 'low'=(0.82*2.98)+1.45+0.18=5.43
-According to the result, compared with the result in a) we could see that thorax will increase the longevity for fruitflies.
+<!--Need review !! i changed thorax to fliesdata$thorax = as.numeric(fliesdata$thorax), is it correct now?  -->
+We calculated the mean of thorax equal to 0.82 and from summary we could see the estimated throax is 2.98. Therefore, estimated longevities for three groups are: 'high'=(0.82*2.98)+1.22=3.66. 'isolated'=(0.82*2.98)+1.22+0.41=4.07. 'low'=(0.82*2.98)+1.22+0.29=3.95.
+According to the result, we conclude that the higher activity is, the shorter longevity they have, the result is similar in a). 
 ```{r echo = FALSE}
 fliesdata$activity = as.factor(fliesdata$activity)
-fliesdata$thorax = as.factor(fliesdata$thorax)
+fliesdata$thorax = as.numeric(fliesdata$thorax)
 fliesanova2 = lm(loglongivity~thorax+activity, data=fliesdata)
 anova(fliesanova2)
 summary(fliesanova2)
@@ -77,14 +75,13 @@ fliesanova2 = lm(loglongivity~thorax+activity, data=fliesdata)
 summary(fliesanova2)
 ```
 
-<!-- Need review!! for the graph, couldn't get the line in plot -->
-From the summary below we could see that p-values for 'isolated:thorax' and 'low:thorax' are bigger than significance level 0.05, therefore we do not reject $H_0$ here which is there is no difference on thorax's dependence under three activities. So the dependence is similar under all three conditions of sexual activity.
-```{r}
+From the plot and summary below we could see that p-values for 'isolated:thorax' and 'low:thorax' are bigger than significance level 0.05, therefore we do not reject $H_0$ here which is there is no difference on thorax's dependence under three activities. So the dependence is similar under all three conditions of sexual activity.
+```{r echo = FALSE}
 plot(loglongivity~thorax, pch=unclass(activity))
 abline(lm(loglongivity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongivity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongivity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
 ```
 
-```{r}
+```{r echo = FALSE}
 aovfliesinter = lm(loglongivity~activity*thorax, data=fliesdata)
 summary(aovfliesinter)
 ```
@@ -97,7 +94,7 @@ We prefer to take thorax length into account, due to our analysis above, we know
 <!-- Verify normality and heteroscedasticity by making a normal QQ-plot of the residuals, and a residuals versus fitted plot, for the analysis that includes thorax length. -->
 In QQ plot we conclude that normality is ok. For the residuals versus fitted plot there is no clear pattern therefore we conclude that there is no sign of heteroscedasticity.
 
-```{r}
+```{r echo = FALSE}
 par(mfrow=c(1,2))
 qqnorm(residuals(fliesanova2));qqline(residuals(fliesanova2))
 plot(fitted(fliesanova2), residuals(fliesanova2))
@@ -108,14 +105,14 @@ plot(fitted(fliesanova2), residuals(fliesanova2))
 We do the same ancova analysis but use longevity as response variable. From the result below we could see p-values for thorax and activity are smaller than significance level 0.05 therefore we get same conclusion as before that thorax and activity will effect fruitflies' longevity. Also we could see from the first plot that longevity increase with thorax. Then from the qq plot we could see the normality is also good. And from residuals versus fitted plot, we noticed some pattern and residuals seem to be bigger with bigger fitted values. So the inference here is, heteroscedasticity exists. 
 In conclusion, it is wise to use the logarithm as response as we don't see heteroscedasticity in that model. 
 
-```{r}
+```{r echo = FALSE}
 fliesanova3 = lm(longevity~thorax+activity, data=fliesdata)
 drop1(fliesanova3, test="F")
 contrasts(fliesdata$activity)=contr.sum
 fliesanova3 = lm(longevity~thorax+activity, data=fliesdata)
 summary(fliesanova3)
 ```
-```{r}
+```{r echo = FALSE}
 plot(fliesdata$longevity~fliesdata$thorax, pch=as.character(fliesdata$activity))
 par(mfrow=c(1,2))
 qqnorm(residuals(fliesanova3));qqline(residuals(fliesanova3))
