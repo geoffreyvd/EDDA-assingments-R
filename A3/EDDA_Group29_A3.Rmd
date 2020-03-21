@@ -1,0 +1,202 @@
+---
+title: "**EDDA Group 29 Assignment 3**"
+author: "Geoffrey van Driessel (12965065), Yizhen Zhao (2658811) & Sophie Vos (2551583)"
+output: pdf_document
+geometry: margin=2cm
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(fig.width=8, fig.height=4) 
+```
+
+An overview of the R code is shown in the Appendix on page X.
+
+## Exercise 2
+<!--  * study effect new teaching method psi
+      * 32 students
+      * assignment pass/fail
+      * gpa 0 - 4 -->
+
+**a)** <!-- Study the data and give a few (> 1) summaries (graphics or tables). --> We study the data by exploring all combinations of the variables. First, we investigate the relation between the variables psi and gpa. We are interested whether the students that receive psi have a similar GPA to the students not receiving psi. We visualized the data in the boxplots below. We observe that the GPAs of all students is evenly distributed. The same applies to the GPAs of the students who received psi, however, the boxplot is positioned slightly higher. Looking at the boxplot of the students who did not receive psi, we observe that student with GPAs below 2.5 are not represented. Moreover, the boxplot is positioned lower compared to the others. To investigate the data further, we constructed histograms. We observe that for students who receive psi, the GPAs higher than 3.0 occur more frequently. In contrast, for students that did not receive psi, the GPAs between 2.5 and 3.0 occur more frequently. Hence, it can be argued that the data is biased because for the group of students who receive psi, the higher GPAs occur more frequently, whereas, for the group of students who do not receive psi, the lower GPAs occur more frequently.
+
+```{r echo = FALSE}
+data = read.table("psi.txt", header = TRUE);
+data_psi = subset(data, psi == 1)
+data_no_psi = subset(data, psi == 0)
+par(mfrow=c(1,3))
+boxplot(data$gpa,ylab="GPA",main="all students")
+boxplot(data_psi$gpa,ylab="GPA",main="students received psi")
+boxplot(data_no_psi$gpa,ylab="GPA",main="students not received psi",ylim=c(2.0,4.0))
+hist(data$gpa,xlab="GPA",main="all students")
+hist(data_psi$gpa,xlab="GPA",main="students received psi")
+hist(data_no_psi$gpa,xlab="GPA",main="students not received psi", breaks = c(2.0,2.5,3.0,3.5,4.0))
+```
+
+Next, we investigate the relation between the variables passed and gpa. Looking at the boxplots, we clearly see that students who passed the test have higher GPAs and the students who did not pass the test have lower GPAs. The histogram confirms this by showing higher frequencies of higher GPAs for students that passed the test and higher frequencies of lower GPAs for students that did not pass the test. Hence, it could be argued that students who have a higher GPA are more likely to pass the test.
+
+```{r echo = FALSE}
+data_passed = subset(data, passed == 1)
+data_not_passed = subset(data, passed == 0)
+par(mfrow=c(1,3))
+boxplot(data$gpa,ylab="gpa",main="all students")
+boxplot(data_passed$gpa,ylab="gpa",main="students passed",ylim=c(2.0,4.0))
+boxplot(data_not_passed$gpa,ylab="gpa",main="students not passed",ylim=c(2.0,4.0))
+hist(data$gpa,xlab="gpa",main="all students")
+hist(data_passed$gpa,xlab="gpa",main="students passed")
+hist(data_not_passed$gpa,xlab="gpa",main="students not passed", breaks = c(2.0,2.5,3.0,3.5,4.0))
+```
+
+Lastly, we investigate the relation between the variables psi and passed. Looking at the barplots below, we observe that there are more students who did not pass the test compared to students who did pass the tests. In contrast, looking at the students who receiced psi, there are more students who passed than not passed, however, this difference is very small. For the students that did not receive psi, this difference is much larger and much more students did not pass compared to the students whi passed. When considering all the students again, we observe that the amount of students receiving and not receiving psi is evenly distributed. Slightly more students did not receive psi compared to the students who received psi. Moreover, we observe that of the students who passed, more received psi and of the students who did not pass, more did not receive psi. 
+
+<!--Add a table below (maybe its more straigtforward and easy to observe? but your barplot is soooo good! lets see if there no more space, then we could minimize this paragraph )-->
+The table shows the numbers for each possible combination of 'passed' and 'psi'. From this we could have a first look about the relation between this two variables. 
+
+```{r echo = FALSE}
+tot=xtabs(~passed+psi, data=data)
+tot
+
+
+par(mfrow=c(2,3))
+barplot(c(nrow(data_passed),nrow(data_not_passed)),ylim=c(0,21),main="all students",ylab="count",names.arg=c("passed","not passed"))
+barplot(c( nrow(subset(data_psi, passed == 1)),nrow(subset(data_psi,passed == 0))),ylim=c(0,21),main="students received psi",ylab="count",names.arg=c("passed","not passed"))
+barplot(c( nrow(subset(data_no_psi, passed == 1)),nrow(subset(data_no_psi,passed == 0))),ylim=c(0,21),main="students not received psi",ylab="count",names.arg=c("passed","not passed"))
+barplot(c(nrow(data_psi),nrow(data_no_psi)),ylim=c(0,21),main="all students",ylab="count",names.arg=c("psi","no psi"))
+barplot(c( nrow(subset(data_passed, psi == 1)),nrow(subset(data_passed,psi == 0))),ylim=c(0,21),main="students passed",ylab="count",names.arg=c("psi","no psi"))
+barplot(c( nrow(subset(data_not_passed, psi == 1)),nrow(subset(data_not_passed,psi == 0))),ylim=c(0,21),main="students not passed",ylab="count",names.arg=c("psi","no psi"))
+```
+
+Lastly we check the collinearity between all variables, and especially the explanatory factors. However it is quite hard to spot collinearity with binominal data, especially if we deal with two binominal data sets only, as we can see below with factors passed and psi. However for gpa we can see some sort of a positive relation with passed, and possibly a negative relation with psi. However this visual diagnostics is too informal to conclude anything.
+```{r echo = FALSE}
+plot(data)
+```
+
+**b)** <!-- Fit a logistic regression model with both explanatory variables. Does psi work? --> 
+
+<!-- We fit a logistic regression model that explains if a students did psi based on their gpa and test score. We test the null hypotheses that the gpa and test score do not influence receiving psi or not. We observe that the p-value for the variable passed is 0.0194. This is smaller than the significance level of 0.05, thus, $H_0$ is rejected. Therefore, we can conclude that passing the test or not does influence if a student receive psi or not. This means that psi works for passing the test. The p-value for the variable gpa is equal to 0.2326. This is larger than the significance level and therefore $H_0$ is not rejected. This means that the gpa does not influence whether a student received gpa or not. -->
+
+```{r echo = FALSE}
+#model <- glm(psi~passed+gpa,data=data,family=binomial)
+#summary(model)
+```
+
+<!--Here is my answear for b), because it said does 'psi' worked? so i think it would be this model: passed~psi+gpa, so that we could see whether the psi will influence the passed -->
+We fit a logistic regression model that explains whether the psi will influence the passed. We test the null hypotheses that the psi do not influence passing the assignment. According to the summary below we could see that p-value for psi is smaller than significance level 0.05. Therefore, we reject $H_0$ here means psi works and will influence a student pass the assignment. 
+```{r echo = FALSE}
+data$passed = factor(data$passed)
+data$psi = factor(data$psi)
+model <- glm(passed~gpa+psi,data=data,family=binomial)
+drop1(model,test="Chisq")
+summary(model)
+```
+
+
+**c)** <!-- Estimate the probability that a student with a gpa equal to 3 who receives psi passes the assignment. Estimate the same probability for a student who does not receive psi. --> <!-- I AM NOT SURE IF THIS IS THE WAY TO GO... BUT COULDNT COME UP WITH ANOTHER METHOD --> 
+
+<!-- We estimate the probability by constructing a subset of all the students with a gpa between 3.00 and 3.99. From this subset, we take two subsets: one of the students receiving psi and one of the students who do not receive psi. To estimate the probability, we devide, for each subset, the number of students that pass the test over the total number of students in that subset. The probability that a student with a gpa equal to 3 who receives psi passes the assignment is 0.63. The probability that a student with a gpa equal to 3 who does not receive psi passes the assignment is 0.29. -->
+```{r echo = FALSE}
+students_gpa_3 = subset(data, gpa >= 3 & gpa < 4)
+gpa_3_psi = subset(students_gpa_3, psi == 1)
+gpa_3_psi_pass = subset(gpa_3_psi, passed == 1)
+gpa_3_no_psi = subset(students_gpa_3, psi == 0)
+gpa_3_no_psi_pass = subset(gpa_3_no_psi, passed == 1)
+#p1 = nrow(gpa_3_psi_pass)/nrow(gpa_3_psi); p1
+#p2 = nrow(gpa_3_no_psi_pass)/nrow(gpa_3_no_psi); p2
+```
+
+<!--here is my answear for c) -->
+From the summary above, we could calculate the probability of a student who receives psi or not passing or not passing the assignment with gpa equal to 3. 
+For student who receives the psi: 
+\begin{center}
+$\frac{1}{1+e^{-(-11.602+2.338)+(3.063*3)}}$ = 0.481
+\end{center}
+For student who do not receives the psi: 
+\begin{center}
+$\frac{1}{1+e^{-(-11.602+3.063*3)}}$ = 0.082
+\end{center}
+So the probability for student with gpa equal to 3 and receives psi to pass the assignment is 48.1%, while for student with gpa equal to 3 and not receives psi to pass the assignment is 8.2%. 
+
+
+**d)** <!-- Estimate the relative change in odds of passing the assignment rendered by instructing students with psi rather than the standard method (for an arbitrary student). What is the interpretation of this number? Is it dependent on gpa? --> 
+
+<!-- Odds can be defined as $o = \frac{p}{(1 - p})$. Therefore, in order to calculate the odds, the propability of the event is required. Thus, we calculate the probaility that a students who received psi passes the assignment (p = 0.57) and the probability that a student who did not receive psi passes the assignment (p = 0.17). Then we calculate the odds which are $o = \frac{0.57}{1 - 0.57} = 1.3)$ and $o = \frac{0.17}{1 - 0.17} = 0.2)$ respectively.The relative change in odds can be calculated by deviding the increase of odds by using psi over the odds of passing when using the standard method. This translates to the formula: relative change in odds = (odds pass test psi - odds pass test no psi) / odds pass test no psi * 100 %. This results in: $\frac{1.3 - 0.2}{0.2} * 100 \% = 567 \%$. This means that using psi increases the odds of passing the test by 567 %. We can intrepret this as an improvement of the test by receiving psi. This is not dependent on the gpa as the gpa are not part of the calculations. --> 
+
+```{r echo = FALSE}
+psi = subset(data, psi == 1)
+psi_pass = subset(psi, passed == 1)
+no_psi = subset(data, psi == 0)
+no_psi_pass = subset(no_psi, passed == 1)
+#p1 = nrow(psi_pass)/nrow(psi); p1
+#p2 = nrow(no_psi_pass)/nrow(no_psi); p2
+#o1 = p1 / (1 - p1); o1
+#o2 = p2 / (1 - p2); o2
+#rco = (o1 - o2) / o2 * 100; rco
+```
+
+<!--my answear for d) -->
+From the summary in b) we notice that the coefficient of psi is 2.338, which is positive, means rasing psi by 1 increases the linear predictor by 2.338 and increases the odds of passing the assignment by a factor e^2.338 which equal to 10.36049. This number means students who receive psi are 10.36049 times more likely to pass the assignment than those who do not receive psi. And this is not dependent on gpa as gpa and psi are independent to each other.
+
+
+<!-- Consider the following alternative method of analysis. Out of 18 students who did not receive psi 3 showed improvement, of the 14 remaining students 8 showed improvement. We perform a test for comparing two binomial proportions: we have two sequences of independent binary “experiments”, of lengths 18 and 14. The experiments in the first sequence have success probability p 1 , those in the second p 2 . We wish to test the null hypothesis H 0 : p 1 = p 2 using the observed numbers of successes 3 and 8. You can apply Fisher’s exact test or the chisquare test for a 2x2 table. In R you can simply type: -->
+**e)** <!-- Do this. What are the numbers 15 and 6 in this table? What is the conclusion? --> We test the null hypothesis p1 = p2. This means that the null hypotheses states that students who do not receive psi and students who receive psi show the same improvement. In the matrix we put the numbers 3, 15, 8 and 6. These number mean the following: from the 18 students who do not receive psi, 3 show improvement. This means that 18 - 3 = 15 students do not show improvements. From the 14 students who receive psi, 8 show improvement. This means that 14 - 8 = 6 students do not show improvement. Running Fisher's test when comparing the two binomial proportions, results in the p-value of 0.0265. This is smaller than the significance level of 0.05 and, therefore, $H_0$ is rejected. Therefore, we conclude that students receiving and not receiving psi do not show a similar improvement.
+
+``` {r}
+x=matrix(c(3,15,8,6),2,2); x
+fisher.test(x)
+```
+
+**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? --> Yes, the second approach is not suitable, because it ignores the influence the gpa factor has. With such a small dataset the gpa could be heavily skewed/biased in one of the psi categories and the result of this would be that the chisquare test explains this bias with the difference in psi categorie, which is wrong.
+With a bigger dataset (central limit theorem; >40) gpa will likely approximaite a normal distribution and therefor we can assume that it wont have an influence, then the chi square test is suitable.
+
+**g)** <!-- Name both an advantage and a disadvantage of the two approaches, relative to each other. --> 
+Logistic regression:
+Advantages: it includes a predictive model which the Fisher exact test lacks.
+Disadvantages: it needs all explanatory variables to be independent to each other. 
+
+Fisher's test:
+Advantage: it is a simpler test suitable with simpler datasets 
+Disadvantages: Can't do a prediction (as for exmaple the intercept is missing), does not take other factors(blocks) into account and it is conservative and may be misleading.
+
+## Exercise 3
+
+**a)** First, we check if there are any linear correlated factors in the model by creating a scatterplot of all the variables. Looking at the scatterplot below, we conclude that there are no linear correlations. Afterwards, using the generalised linear regression model function, we run the Poisson regression. The output is presented below.
+
+```{r fig.width=8, fig.height=5, echo=FALSE}
+africa = read.table("africa.txt", header = TRUE)
+plot(africa)
+```
+
+```{r echo=FALSE}
+africa$pollib = factor(africa$pollib)
+africaglm=glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numelec+numregim, family=poisson,data=africa)
+summary(africaglm)
+```
+
+We conclude that oligarchy, pollib and parties significantly estimate (or have a linear relation with) the amount of successful military coups. As we take pollib as a factor, we find that category 2 (full civil rights) has significant less military coups (estimated 1.69 coups less) than pollib category 0. Afterwards, to evaluate the model, we plotted the residuals against the fitted values. The plot shows equal variance, however, a pattern can be observed. This is due to the dependent variable being a count on a small scale (0 - 6) which can be interpreted as discrete data. Approximately, for each target value, a curve is visible. Next, we calculate the logarithm to ensure that the x-values are fitted by a linear function. The second plot shows more spread, however, the previously mentioned structure of curves is still visible. Finally, we plot the response residuals. We observe that the response residuals increase with the (logarithm) of the fitted values, as expected under a Poisson model. 
+
+```{r fig.width=8, fig.height=3, echo=FALSE}
+par(mfrow=c(1,3))
+plot(fitted(africaglm),residuals(africaglm))
+plot(log(fitted(africaglm)),residuals(africaglm))
+plot(log(fitted(africaglm)),residuals(africaglm, type="response"))
+```
+
+**b)** Following the step down method, we removed the factors in the order: numelec > numregim > size > popn > pctvote. This results in the model miltcoup = 0.251377 + 0.092622 * oligarchy - 0.574103 * pollib + 0.022059 * parties + error. In this process, we started with an R-squared value of 0.57 and ended up with a value of 0.50, however, we reduced the model from eight factors to three. Moreover, the residual plots look similar to the ones in a) in which all factors were included in the model.
+
+```{r echo=FALSE, results='hide'}
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numelec+numregim, family=poisson,data=africa))
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size+numregim, family=poisson,data=africa))
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn+size, family=poisson,data=africa))
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote+popn, family=poisson,data=africa))
+summary(glm(miltcoup~oligarchy+pollib+parties+pctvote, family=poisson,data=africa))
+summary(glm(miltcoup~oligarchy+pollib+parties, family=poisson,data=africa))
+```
+```{r fig.width=8, fig.height=3, echo=FALSE, results='hide'}
+africaglm2=glm(miltcoup~oligarchy+pollib+parties, family=poisson,data=africa)
+with(summary(africaglm2), 1 - deviance/null.deviance)
+summary(africaglm2)
+par(mfrow=c(1,3))
+plot(fitted(africaglm2),residuals(africaglm2))
+plot(log(fitted(africaglm2)),residuals(africaglm2))
+plot(log(fitted(africaglm2)),residuals(africaglm2, type="response"))
+```
