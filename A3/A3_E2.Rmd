@@ -63,6 +63,10 @@ barplot(c( nrow(subset(data_passed, psi == 1)),nrow(subset(data_passed,psi == 0)
 barplot(c( nrow(subset(data_not_passed, psi == 1)),nrow(subset(data_not_passed,psi == 0))),ylim=c(0,21),main="students not passed",ylab="count",names.arg=c("psi","no psi"))
 ```
 
+Lastly we check the collinearity between all variables, and especially the explanatory factors. However it is quite hard to spot collinearity with binominal data, especially if we deal with two binominal data sets only, as we can see below with factors passed and psi. However for gpa we can see some sort of a positive relation with passed, and possibly a negative relation with psi. However this visual diagnostics is too informal to conclude anything.
+```{r echo = FALSE}
+plot(data)
+```
 
 **b)** <!-- Fit a logistic regression model with both explanatory variables. Does psi work? --> 
 
@@ -76,7 +80,10 @@ barplot(c( nrow(subset(data_not_passed, psi == 1)),nrow(subset(data_not_passed,p
 <!--Here is my answear for b), because it said does 'psi' worked? so i think it would be this model: passed~psi+gpa, so that we could see whether the psi will influence the passed -->
 We fit a logistic regression model that explains whether the psi will influence the passed. We test the null hypotheses that the psi do not influence passing the assignment. According to the summary below we could see that p-value for psi is smaller than significance level 0.05. Therefore, we reject $H_0$ here means psi works and will influence a student pass the assignment. 
 ```{r echo = FALSE}
-model <- glm(passed~psi+gpa,data=data,family=binomial)
+data$passed = factor(data$passed)
+data$psi = factor(data$psi)
+model <- glm(passed~gpa+psi,data=data,family=binomial)
+drop1(model,test="Chisq")
 summary(model)
 ```
 
@@ -135,7 +142,8 @@ x=matrix(c(3,15,8,6),2,2); x
 fisher.test(x)
 ```
 
-**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? --> No, the second approach is not wrong, while it ignored the potential correlation between variables 'passed' and 'gpa'. But when considering whether a student receive psi or not is indenpendent to gpa, the second approach is correct. 
+**f)** <!-- Given the way the experiment was conducted, is this second approach wrong? --> Yes, the second approach is not suitable, because it ignores the influence the gpa factor has. With such a small dataset the gpa could be heavily skewed/biased in one of the psi categories and the result of this would be that the chisquare test explains this bias with the difference in psi categorie, which is wrong.
+With a bigger dataset (central limit theorem; >40) gpa will likely approximaite a normal distribution and therefor we can assume that it wont have an influence, then the chi square test is suitable.
 
 **g)** <!-- Name both an advantage and a disadvantage of the two approaches, relative to each other. --> 
 Logistic regression:
@@ -143,5 +151,5 @@ Advantages: it includes a predictive model which the Fisher exact test lacks.
 Disadvantages: it needs all explanatory variables to be independent to each other. 
 
 Fisher's test:
-Advantage: it is more suitable to work with smaller datasets as is the case in our experiment.
-Disadvantages: it is conservative and may be misleading.
+Advantage: it is a simpler test suitable with simpler datasets 
+Disadvantages: Can't do a prediction (as for exmaple the intercept is missing), does not take other factors(blocks) into account and it is conservative and may be misleading.
