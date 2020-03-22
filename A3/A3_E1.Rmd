@@ -49,7 +49,7 @@ anova(fliesanova)
 <!-- Does sexual activity increase or decrease longevity?  What are the estimated longevities for the three groups, for a fly with average thorax length? -->
 Now from the result we could know the p-values for both activity and thorax are smaller than significant level 0.05. Therefore $H_0$ here are rejected which means acitivity and thorax will effect the longevity. 
 <!--Need review !! i changed thorax to fliesdata$thorax = as.numeric(fliesdata$thorax), is it correct now?  -->
-We calculated the mean of thorax equal to 0.82 and from summary we could see the estimated throax is 2.98. Therefore, estimated longevities for three groups are: 'high'=(0.82 * 2.98)+1.22=3.66. 'isolated'=(0.82 * 2.98)+1.22+0.41=4.07. 'low'=(0.82*2.98)+1.22+0.29=3.95.
+We calculated the mean of thorax equal to 0.82 and from summary we could see the estimated throax is 0.067. And activity3 = -(activity1+activity2) = 0.054. For 'high': 0.82+3.309-0.233+0.067=3.963, for 'isolated': 0.82+3.309+0.179+0.067=4.375, for 'low': 0.82+3.309+0.054+0.067=4.25.
 According to the result, we conclude that the higher activity is, the shorter longevity they have, the result is similar in a). 
 
 ```{r echo = FALSE, results='hide'}
@@ -61,6 +61,8 @@ anova(fliesanova2)
 ```
 
 ```{r echo = FALSE}
+contrasts(fliesdata$activity)=contr.sum;
+fliesanova2 = lm(loglongevity~activity+thorax, data=fliesdata)
 summary(fliesanova2)
 ```
 

@@ -39,7 +39,15 @@ confint(fliesanova)
 ```
 
 **b)** 
-<!--Investigate whether sexual activity influences longevity by performing a statistical test, now including thorax length as an explanatory variable into the analysis. --> For this exercise, we apply two-way Anova with the two factors: activity and thorax. With $H_0$ (1) activity does not influence longevity, (2) thorax does not influence logevity, and (3) there is no interaction between activity and thorax. The output of this test shows that the p-values for the first two null hypotheses are all smaller than 0.05, therefore, we reject the first two null hypotheses. This means that activity and thorax influence the longevity. The p-value for the third null hypothesis is 0.4574. This is larger than 0.05, therefore, we do not reject the third null hypothesis. This means that there is no interaction betweem them. <!-- Does sexual activity increase or decrease longevity?  What are the estimated longevities for the three groups, for a fly with average thorax length? --> From the output we learned that the p-values for both activity and thorax are smaller than the significance level of 0.05. Therefore, $H_0$ is rejected which means that acitivity and thorax will effect the longevity. We calculated that the mean of thorax is equal to 0.82 and from the summary we observe that the estimated thorax is 2.98. Therefore, the estimated longevities for the three groups are: 'high' = (0.82 * 2.98) + 1.22 = 3.66, 'isolated' = (0.82 * 2.98) + 1.22 + 0.41 = 4.07 and, 'low' = (0.82 * 2.98) + 1.22 + 0.29 = 3.95. According to this result, we conclude that the higher sexual activity is, the shorter longevity they have. This result is similar to the output in a).
+<!--Investigate whether sexual activity influences longevity by performing a statistical test, now including thorax length as an explanatory variable into the analysis. --> For this exercise, we apply two-way Anova with the two factors: activity and thorax. With $H_0$ (1) activity does not influence longevity, (2) thorax does not influence logevity, and (3) there is no interaction between activity and thorax. The output of this test shows that the p-values for the first two null hypotheses are all smaller than 0.05, therefore, we reject the first two null hypotheses. This means that activity and thorax influence the longevity. The p-value for the third null hypothesis is 0.4574. This is larger than 0.05, therefore, we do not reject the third null hypothesis. This means that there is no interaction betweem them. Then our model fit the additive model. 
+
+<!-- Does sexual activity increase or decrease longevity?  What are the estimated longevities for the three groups, for a fly with average thorax length? --> 
+
+Now, from the output we learned that the p-values for both activity and thorax are smaller than the significance level of 0.05. Therefore, $H_0$ is rejected which means that acitivity and thorax will effect the longevity. 
+
+We calculated the mean of thorax equal to 0.82 and from summary we could see the estimated throax is 0.067. And activity3 = -(activity1+activity2) = 0.054. So the longevity for the three groups are: for 'high': 0.82+3.309-0.233+0.067=3.963, for 'isolated': 0.82+3.309+0.179+0.067=4.375, for 'low': 0.82+3.309+0.054+0.067=4.25.
+
+According to the result, we conclude that the higher activity is, the shorter longevity they have, the result is similar in a). 
 
 ```{r echo = FALSE, results='hide'}
 fliesdata$activity = as.factor(fliesdata$activity)
@@ -54,6 +62,8 @@ anova(fliesanova2)
 ```
 
 ```{r echo = FALSE}
+contrasts(fliesdata$activity)=contr.sum;
+fliesanova2 = lm(loglongevity~activity+thorax, data=fliesdata)
 summary(fliesanova2)
 ```
 
@@ -244,6 +254,54 @@ plot(log(fitted(africaglm2)),residuals(africaglm2, type="response"))
 ## Appendix: R code
 ```{r echo=TRUE, eval=FALSE}
 # --- Exercise 1 --- #
+#A
+fliesdata = read.table("fruitflies.txt", header = TRUE)
+fliesdata$loglongevity = log(fliesdata$longevity)
+attach(fliesdata)
+par(mfrow=c(1,2))
+plot(longevity~activity, data=fliesdata)
+plot(loglongevity~thorax, data=fliesdata);abline(lm(loglongevity~thorax, data=fliesdata))
+pairs(fliesdata)
+fliesanova = lm(loglongevity~activity, data=fliesdata)
+anova(fliesanova); summary(fliesanova); confint(fliesanova)
+#B
+fliesdata$activity = as.factor(fliesdata$activity)
+fliesdata$thorax = as.factor(fliesdata$thorax)
+fliesanova = lm(loglongevity~thorax*activity, data=fliesdata)
+anova(fliesanova)
+mean(thorax,data=fliesdata)
+fliesdata$activity = as.factor(fliesdata$activity)
+fliesdata$thorax = as.numeric(fliesdata$thorax)
+fliesanova2 = lm(loglongevity~thorax+activity, data=fliesdata)
+anova(fliesanova2)
+contrasts(fliesdata$activity)=contr.sum;
+fliesanova2 = lm(loglongevity~activity+thorax, data=fliesdata)
+summary(fliesanova2)
+#C
+plot(fliesdata$loglongevity~fliesdata$thorax,pch=as.character(fliesdata$activity))
+drop1(fliesanova2, test="F")
+contrasts(fliesdata$activity)=contr.sum
+fliesanova2 = lm(loglongevity~thorax+activity, data=fliesdata)
+summary(fliesanova2)
+plot(loglongevity~thorax, pch=unclass(activity))
+abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
+aovfliesinter = lm(loglongevity~activity*thorax, data=fliesdata)
+summary(aovfliesinter)
+#E
+par(mfrow=c(1,2))
+qqnorm(residuals(fliesanova2));qqline(residuals(fliesanova2))
+plot(fitted(fliesanova2), residuals(fliesanova2))
+#F
+fliesanova3 = lm(longevity~thorax+activity, data=fliesdata)
+drop1(fliesanova3, test="F")
+contrasts(fliesdata$activity)=contr.sum
+fliesanova3 = lm(longevity~thorax+activity, data=fliesdata)
+summary(fliesanova3)
+plot(fliesdata$longevity~fliesdata$thorax, pch=as.character(fliesdata$activity))
+par(mfrow=c(1,2))
+qqnorm(residuals(fliesanova3));qqline(residuals(fliesanova3))
+plot(fitted(fliesanova3), residuals(fliesanova3))
+
 
 # --- Exercise 2 --- #
 
