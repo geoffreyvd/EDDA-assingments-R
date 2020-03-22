@@ -41,7 +41,7 @@ confint(fliesanova)
 
 ```{r echo = FALSE, results='hide'}
 fliesdata$activity = as.factor(fliesdata$activity)
-fliesdata$thorax = as.factor(fliesdata$thorax)
+fliesdata$thorax = as.numeric(fliesdata$thorax)
 fliesanova = lm(loglongevity~thorax*activity, data=fliesdata)
 anova(fliesanova)
 ```
@@ -69,6 +69,7 @@ summary(fliesanova2)
 **c)**
 <!-- How does thorax length influence longevity? Investigate graphically and by using an appropriate test whether this dependence is similar under all three conditions of sexual activity. -->
 From the graph below we could see that longevity increase with the throax. Group 'isolated' has the longest longevity, followed by 'low' and 'high'.
+
 ```{r echo = FALSE}
 plot(fliesdata$loglongevity~fliesdata$thorax,pch=as.character(fliesdata$activity))
 ```
@@ -83,9 +84,9 @@ summary(fliesanova2)
 ```
 
 From the plot and summary below we could see that p-values for 'isolated:thorax' and 'low:thorax' are bigger than significance level 0.05, therefore we do not reject $H_0$ here which is there is no difference on thorax's dependence under three activities. So the dependence is similar under all three conditions of sexual activity.
+
 ```{r echo = FALSE}
-plot(loglongevity~thorax, pch=unclass(activity))
-abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
+plot(loglongevity~thorax, pch=unclass(activity));abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
 ```
 
 ```{r echo = FALSE}

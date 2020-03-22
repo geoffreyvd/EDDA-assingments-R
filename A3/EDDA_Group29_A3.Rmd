@@ -51,7 +51,7 @@ According to the result, we conclude that the higher activity is, the shorter lo
 
 ```{r echo = FALSE, results='hide'}
 fliesdata$activity = as.factor(fliesdata$activity)
-fliesdata$thorax = as.factor(fliesdata$thorax)
+fliesdata$thorax = as.numeric(fliesdata$thorax)
 fliesanova = lm(loglongevity~thorax*activity, data=fliesdata)
 anova(fliesanova)
 mean(thorax,data=fliesdata)
