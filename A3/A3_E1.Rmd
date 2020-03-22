@@ -13,7 +13,7 @@ knitr::opts_chunk$set(fig.width=8, fig.height=4)
 ## Exercise 1
 
 **a)** 
-<!-- Make an informative plot of the data. --> First, we add a column 'loglongevity' which will be used as a response variable. Next, we plot the longevity data in a separate boxplot for each activity. We observe that the longevity for fruitflies of the activity 'isolated' is the longest, followed by the activity 'low' and the activity 'high' has the lowest longevity. Looking at the scater plot of loglongevity and thorax, we observe a weak linear correlation. The points follow a linear pattern, however, they are relatively widely spread. Third, we could observe a linearity bewteen longevity and thorax.
+<!-- Make an informative plot of the data. --> First, we add a column 'loglongevity' which will be used as a response variable. Next, we plot the longevity data in a separate boxplot for each activity. We observe that the longevity for fruitflies of the activity 'isolated' is the longest, followed by the activity 'low' and the activity 'high' has the lowest longevity. Looking at the scater plot of loglongevity and thorax, we observe a weak linear correlation. The points follow a linear pattern, however, they are relatively widely spread. Third, we could observe a weak linear correlation bewteen longevity and thorax.
 
 ```{r echo = FALSE, results='hide'}
 fliesdata = read.table("fruitflies.txt", header = TRUE)
