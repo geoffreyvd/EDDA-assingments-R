@@ -12,6 +12,109 @@ knitr::opts_chunk$set(fig.width=8, fig.height=4)
 
 An overview of the R code is shown in the Appendix on page X.
 
+## Exercise 1
+
+**a)** First, we add a column 'loglongevity' which will be used as a response variable. Next, we plot the longevity data in a separate boxplot for each activity. We observe that the longevity for fruitflies of the activity 'isolated' is the longest, followed by the activity 'low', the activity 'high' has the lowest longevity. Looking at the scater plot of loglongevity and thorax, we observe a weak linear correlation. The points follow a linear pattern, however, they are relatively widely spread. Furthermore, we could observe a weak linear correlation bewteen longevity and thorax.
+
+```{r fig.width=8, fig.height=3, echo = FALSE, results='hide'}
+fliesdata = read.table("fruitflies.txt", header = TRUE)
+fliesdata$loglongevity = log(fliesdata$longevity)
+attach(fliesdata)
+par(mfrow=c(1,2))
+plot(longevity~activity, data=fliesdata)
+plot(loglongevity~thorax, data=fliesdata);abline(lm(loglongevity~thorax, data=fliesdata))
+pairs(fliesdata)
+fliesanova = lm(loglongevity~activity, data=fliesdata)
+anova(fliesanova)
+```
+
+<!--Investigate whether sexual activity influences longevity by performing a statistical test, without taking the thorax length into account.--> 
+In order to investigate whether sexual activity influences longevity, we performed an one-way Anova test. The null hypothesis states that sexual activity does not influence the longevity. The test results in a p-value smaller than the significance level of 0.05. Therefore, we reject $H_0$ and thus conclude that the sexual activity will influence the longevity. 
+<!--What are the estimated longevities for the three conditions? Comment.-->
+According to the summary, the estimated longevity for group 'high' is 3.60, and for group 'isolated' 3.60 + 0.52 = 4.12 and for group 'low' 3.60 + 0.39 = 3.99. With a 95% confidence interval, the logevity for 'high' is [3.48 3.72], for 'isolated' [3.82, 4.41] and for 'low' [3.70, 4.29]. From this, we confirm that a high sexual acitivty has a negative impact on the longevity.
+
+```{r echo = FALSE}
+summary(fliesanova)
+confint(fliesanova)
+```
+
+**b)** 
+<!--Investigate whether sexual activity influences longevity by performing a statistical test, now including thorax length as an explanatory variable into the analysis. --> For this exercise, we apply two-way Anova with the two factors: activity and thorax. With $H_0$ (1) activity does not influence longevity, (2) thorax does not influence logevity, and (3) there is no interaction between activity and thorax. The output of this test shows that the p-values for the first two null hypotheses are all smaller than 0.05, therefore, we reject the first two null hypotheses. This means that activity and thorax influence the longevity. The p-value for the third null hypothesis is 0.4574. This is larger than 0.05, therefore, we do not reject the third null hypothesis. This means that there is no interaction betweem them. <!-- Does sexual activity increase or decrease longevity?  What are the estimated longevities for the three groups, for a fly with average thorax length? --> From the output we learned that the p-values for both activity and thorax are smaller than the significance level of 0.05. Therefore, $H_0$ is rejected which means that acitivity and thorax will effect the longevity. We calculated that the mean of thorax is equal to 0.82 and from the summary we observe that the estimated thorax is 2.98. Therefore, the estimated longevities for the three groups are: 'high' = (0.82 * 2.98) + 1.22 = 3.66, 'isolated' = (0.82 * 2.98) + 1.22 + 0.41 = 4.07 and, 'low' = (0.82 * 2.98) + 1.22 + 0.29 = 3.95. According to this result, we conclude that the higher activity is, the shorter longevity they have. This result is similar to the output in a).
+
+```{r echo = FALSE, results='hide'}
+fliesdata$activity = as.factor(fliesdata$activity)
+fliesdata$thorax = as.factor(fliesdata$thorax)
+fliesanova = lm(loglongevity~thorax*activity, data=fliesdata)
+anova(fliesanova)
+mean(thorax,data=fliesdata)
+fliesdata$activity = as.factor(fliesdata$activity)
+fliesdata$thorax = as.numeric(fliesdata$thorax)
+fliesanova2 = lm(loglongevity~thorax+activity, data=fliesdata)
+anova(fliesanova2)
+```
+
+```{r echo = FALSE}
+summary(fliesanova2)
+```
+
+**c)**
+<!-- How does thorax length influence longevity? Investigate graphically and by using an appropriate test whether this dependence is similar under all three conditions of sexual activity. -->
+From the graph below we observe that longevity increases with the thorax. The group 'isolated' has the longest longevity, followed by 'low' and, lastly, 'high'.
+
+```{r fig.width=6, fig.height=3, echo = FALSE}
+plot(fliesdata$loglongevity~fliesdata$thorax,pch=as.character(fliesdata$activity))
+```
+
+Because thorax will influence the longevity, its dependence on activity is not so clear. Here we apply ANCOVA and use 'drop1' to obtain the p-value. According to the result, all the p-values are smaller than the significance level of 0.05. This confirms our analysis before, that both activity and thorax will influence the longevity. From the plot and summary below, we observe that the p-values for 'isolated:thorax' and 'low:thorax' are larger than the significance level of 0.05, therefore, we do not reject $H_0$. This means that there is no difference on thorax's dependence for the three activities. In other words, the dependence is similar under all three conditions of sexual activity.
+
+```{r echo = FALSE, results='hide'}
+drop1(fliesanova2, test="F")
+contrasts(fliesdata$activity)=contr.sum
+fliesanova2 = lm(loglongevity~thorax+activity, data=fliesdata)
+summary(fliesanova2)
+```
+
+```{r fig.width=6, fig.height=3, echo = FALSE}
+plot(loglongevity~thorax, pch=unclass(activity))
+abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'isolated',]), col='blue'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'high',]), col='green'); abline(lm(loglongevity~thorax, data=fliesdata[fliesdata$activity == 'low',]), col='red')
+aovfliesinter = lm(loglongevity~activity*thorax, data=fliesdata)
+summary(aovfliesinter)
+```
+
+**d)** 
+<!-- Which of the two analyses, without or with thorax length, do you prefer? Is one of the analyses wrong?  -->
+We prefer to take the length of the thorax into account. Based on our analysis above, we know that the length of the thorax influences the longevity of fruitflies. So it is not wise to ignore such a factor when doing analysis. But the first analysis is not wrong. At the begining, we did not know thorax's effect towards longevity and we only took one factor (activity) into account. Therefore, we apply one-way anova. Each test gives right results. As the first one only focus on activities' influence to longevity and second one focus on both activity and thorax. 
+
+**e)**
+<!-- Verify normality and heteroscedasticity by making a normal QQ-plot of the residuals, and a residuals versus fitted plot, for the analysis that includes thorax length. -->
+Looking at the QQ-plot, we conclude that the data aprroximates a normal distribution. Looking at the residuals versus fitted values plot, we observe that there is no clear pattern. Therefore, we conclude that there is no sign of heteroscedasticity.
+
+```{r fig.width=6, fig.height=3, echo = FALSE}
+par(mfrow=c(1,2))
+qqnorm(residuals(fliesanova2));qqline(residuals(fliesanova2))
+plot(fitted(fliesanova2), residuals(fliesanova2))
+```
+
+**f)**
+<!-- Perform the ancova analysis with the number of days as the response, rather than its logarithm. Verify normality and heteroscedasticity of the residuals of this analysis. Was it wise to use the logarithm as response? -->
+We do the same ancova analysis but use longevity as response variable. From the result we could know p-values for thorax and activity are smaller than significance level 0.05 therefore we get same conclusion as before that thorax and activity will effect fruitflies' longevity. Also we could see from the first plot that longevity increase with thorax. Then from the qq plot we could see the normality is also good. And from residuals versus fitted plot, we noticed some pattern and residuals seem to be bigger with bigger fitted values. So the inference here is, heteroscedasticity exists. 
+In conclusion, it is wise to use the logarithm as response as we don't see heteroscedasticity in that model. 
+
+```{r echo = FALSE, results='hide'}
+fliesanova3 = lm(longevity~thorax+activity, data=fliesdata)
+drop1(fliesanova3, test="F")
+contrasts(fliesdata$activity)=contr.sum
+fliesanova3 = lm(longevity~thorax+activity, data=fliesdata)
+summary(fliesanova3)
+```
+
+```{r echo = FALSE}
+plot(fliesdata$longevity~fliesdata$thorax, pch=as.character(fliesdata$activity))
+par(mfrow=c(1,2))
+qqnorm(residuals(fliesanova3));qqline(residuals(fliesanova3))
+plot(fitted(fliesanova3), residuals(fliesanova3))
+```
+
 ## Exercise 2
 
 **a)** We study the data by exploring all combinations of the variables. First, we investigate the relation between the variables psi and gpa. We are interested whether the students that receive psi have a similar GPA to the students not receiving psi. We visualized the data in the boxplots below. We observe that the GPAs of all students is evenly distributed. The same applies to the GPAs of the students who received psi, however, the boxplot is positioned slightly higher. Looking at the boxplot of the students who did not receive psi, we observe that student with GPAs below 2.5 are not represented. Moreover, the boxplot is positioned lower compared to the others. To investigate the data further, we constructed histograms. We observe that for students who receive psi, the GPAs higher than 3.0 occur more frequently. In contrast, for students that did not receive psi, the GPAs between 2.5 and 3.0 occur more frequently. Hence, it can be argued that the data is biased because for the group of students who receive psi, the higher GPAs occur more frequently, whereas, for the group of students who do not receive psi, the lower GPAs occur more frequently.
@@ -56,6 +159,12 @@ barplot(c( nrow(subset(data_no_psi, passed == 1)),nrow(subset(data_no_psi,passed
 barplot(c(nrow(data_psi),nrow(data_no_psi)),ylim=c(0,21),main="all students",ylab="count",names.arg=c("psi","no psi"))
 barplot(c( nrow(subset(data_passed, psi == 1)),nrow(subset(data_passed,psi == 0))),ylim=c(0,21),main="students passed",ylab="count",names.arg=c("psi","no psi"))
 barplot(c( nrow(subset(data_not_passed, psi == 1)),nrow(subset(data_not_passed,psi == 0))),ylim=c(0,21),main="students not passed",ylab="count",names.arg=c("psi","no psi"))
+```
+
+Lastly, we check the collinearity between all variables, and especially the explanatory factors. However, it is quite hard to spot collinearity with binominal data. For gpa we can see some sort of a positive relation with passed, and possibly a negative relation with psi. However, this visual diagnostics is too informal to conclude anything.
+
+```{r fig.width=6, fig.height=3, echo = FALSE}
+plot(data)
 ```
 
 **b)** We fit a logistic regression model that explains if a student passes the test based on whether the student received psi and their gpa. We test the null hypotheses that receiving psi does not influence passing the assignment. According to the summary below, we observe that the p-value for psi is smaller than the significance level of 0.05. Therefore, we reject $H_0$. This means that psi works and does influences whether a student passes the test or not.
