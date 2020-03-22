@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(fig.width=8, fig.height=4) 
 ```
 
-An overview of the R code is shown in the Appendix on page X.
+An overview of the R code is shown in the Appendix on page 10 to 13.
 
 ## Exercise 1
 
