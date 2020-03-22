@@ -147,9 +147,11 @@ hist(data_passed$gpa,xlab="gpa",main="students passed")
 hist(data_not_passed$gpa,xlab="gpa",main="students not passed", breaks = c(2.0,2.5,3.0,3.5,4.0))
 ```
 
-Afterwards, we investigate the relation between the variables psi and passed. Looking at the bar plots below, we observe that more students did not pass the test compared to students who did pass the tests. In contrast, looking at the students who received psi, there are more students who passed than not passed, however, this difference is very small. For the students that did not receive psi, this difference is much larger and much more students did not pass compared to the students who passed. When considering all the students again, we observe that the amount of students receiving and not receiving psi is evenly distributed. Slightly more students did not receive psi compared to the students who received psi. Moreover, we observe that of the students who passed, more received psi and of the students who did not pass, more did not receive psi.
+Afterwards, we investigate the relation between the variables psi and passed. Looking at the bar plots below, we observe that more students did not pass the test compared to students who did pass the tests. In contrast, looking at the students who received psi, there are more students who passed than not passed, however, this difference is very small. For the students that did not receive psi, this difference is much larger and much more students did not pass compared to the students who passed. When considering all the students again, we observe that the amount of students receiving and not receiving psi is evenly distributed. Slightly more students did not receive psi compared to the students who received psi. Moreover, we observe that of the students who passed, more received psi and of the students who did not pass, more did not receive psi. The table shows the numbers for each possible combination of 'passed' and 'psi'.
 
 ```{r fig.width=8, fig.height=4, echo = FALSE}
+tot=xtabs(~passed+psi, data=data)
+tot
 # passed vs psi
 par(mfrow=c(2,3))
 barplot(c(nrow(data_passed),nrow(data_not_passed)),ylim=c(0,21),main="all students",ylab="count",names.arg=c("passed","not passed"))
@@ -269,6 +271,7 @@ hist(data$gpa,xlab="gpa",main="all students")
 hist(data_passed$gpa,xlab="gpa",main="students passed")
 hist(data_not_passed$gpa,xlab="gpa",main="students not passed", breaks = c(2.0,2.5,3.0,3.5,4.0))
 # passed vs psi
+tot=xtabs(~passed+psi, data=data); tot
 par(mfrow=c(2,3))
 barplot(c(nrow(data_passed),nrow(data_not_passed)),ylim=c(0,21),main="all students",
   ylab="count",names.arg=c("passed","not passed"))
